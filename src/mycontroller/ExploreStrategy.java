@@ -1,6 +1,6 @@
 package mycontroller;
 
-public class ExploreStrategy implements IMoveStrategy {
+public abstract class ExploreStrategy implements IMoveStrategy {
 
 	@Override
 	public void move() {
