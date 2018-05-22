@@ -1,6 +1,9 @@
 package mycontroller;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Stack;
 
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 
@@ -32,12 +35,9 @@ public class MyAIController extends CarController{
 		 *  
 		 */
 		currentView.update(getView(), new Coordinate(getPosition()));
-		
-//		applyForwardAcceleration();
-//		// no wall on the left
-//		if(!checkLeftWall()) {
-//			turnLeft(delta);
-//		}
+		// for testing path finding in View
+//		Coordinate destination = new Coordinate(8,15);
+//		Stack<Coordinate> path = currentView.findPath(destination);
 
 		
 		
