@@ -8,8 +8,6 @@ public abstract class ExploreStrategy implements IMoveStrategy {
 		
 	}
 	
-	public void checkWall() {
+	public abstract void explore(View currentView, Float health);
 		
-	}
-
 }

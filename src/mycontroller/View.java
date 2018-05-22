@@ -14,13 +14,14 @@ import utilities.Coordinate;
  */
 public class View  {
 	private HashMap<Coordinate, MapTile> currentView;
-	
-	public View(HashMap<Coordinate, MapTile> currentView) {
-		this.currentView = currentView;
+	private Coordinate currentPosition;
+	public View() {
+		
 	}
 	
 	public void lookForKey(List<Key> keys){
 		Iterator<Coordinate> allTiles = this.currentView.keySet().iterator();
+	
 		MapTile tile;
 		Coordinate coord;
 		int keyNumber;
@@ -38,6 +39,10 @@ public class View  {
 			}
 		}
 	}
-
+	
+	public void update(HashMap<Coordinate, MapTile> currentView, Coordinate myPosition) {
+		this.currentView = currentView;
+		this.currentPosition = myPosition;
+	}
 
 }

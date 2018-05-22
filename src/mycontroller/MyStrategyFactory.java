@@ -4,8 +4,9 @@ package mycontroller;
  * 
  */
 public class MyStrategyFactory {
-	protected static MyStrategyFactory instance;
-
+	static MyStrategyFactory instance;
+	
+	
 	public static MyStrategyFactory getInstance() {
 		return instance;
 	}
@@ -21,9 +22,11 @@ public class MyStrategyFactory {
 		return null;
 	}
 	
-	public IMoveStrategy createCompositeStrategy() {
-
-		return (IMoveStrategy) new CompositeStrategy();
+	public CompositeStrategy createCompositeStrategy() {
+		CompositeStrategy composite = new CompositeStrategy();
+		composite.add(new CollectKeyStrategy());
+		
+		return composite;
 	}
 	
 }

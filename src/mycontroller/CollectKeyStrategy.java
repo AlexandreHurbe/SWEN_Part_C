@@ -6,5 +6,8 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public void collectKey() {
+		
+	}
 }
