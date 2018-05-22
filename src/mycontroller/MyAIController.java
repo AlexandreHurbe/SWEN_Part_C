@@ -8,16 +8,20 @@ import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
 import world.Car;
+import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	private View currentView = new View();
+	private View currentView;
 	private IMoveStrategy currentStrategy;
-	private HashMap<Coordinate, MapTile> map = getMap();
-	private Coordinate currentPos = new Coordinate(getPosition());
+	private HashMap<Coordinate, MapTile> map;
+	private Coordinate currentPos;
 	private List<Key> keys;
+	private HashMap<Coordinate, WorldSpatial.Direction> path;
 	public MyAIController(Car car) {
 		super(car);	
-		System.out.println(getView().size());
+		map = getMap();
+		currentView = new View(map);
+		currentPos = new Coordinate(getPosition());
 	}
 	
 	@Override

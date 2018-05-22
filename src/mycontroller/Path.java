@@ -1,11 +1,20 @@
 package mycontroller;
 
-public class Path {
+import java.util.HashMap;
 
+import utilities.Coordinate;
+import world.WorldSpatial;
+
+public class Path {
+	private HashMap<Coordinate, WorldSpatial.Direction> currentPath;
 	public Path() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	// given current position and destination position find the path to reach destination
+	
+	public void updatePath(HashMap<Coordinate, WorldSpatial.Direction> path) {
+		this.currentPath = path;
+	}
+	
 	
 }

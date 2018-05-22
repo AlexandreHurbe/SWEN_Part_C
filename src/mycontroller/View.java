@@ -14,9 +14,10 @@ import utilities.Coordinate;
  */
 public class View  {
 	private HashMap<Coordinate, MapTile> currentView;
+	private HashMap<Coordinate, MapTile> map;
 	private Coordinate currentPosition;
-	public View() {
-		
+	public View(HashMap<Coordinate, MapTile> map) {
+		this.map = map;
 	}
 	
 	public void lookForKey(List<Key> keys){
@@ -43,6 +44,10 @@ public class View  {
 	public void update(HashMap<Coordinate, MapTile> currentView, Coordinate myPosition) {
 		this.currentView = currentView;
 		this.currentPosition = myPosition;
+	}
+	
+	public void findPath(Coordinate destination) {
+		
 	}
 
 }
