@@ -22,6 +22,7 @@ public class MyAIController extends CarController{
 	private HashMap<Coordinate, MyDirection.Direction> path;
 	private Move move;
 	private Move.Action lastAction = Move.Action.FORWARD;
+	private final float SPEED_LIM = (float) 4;
 	public MyAIController(Car car) {
 		super(car);	
 		map = getMap();
@@ -39,11 +40,9 @@ public class MyAIController extends CarController{
 		 *  
 		 */
 		currentView.update(getView(), new Coordinate(getPosition()), getAngle());
-		
-		// for testing path finding in View
 		Coordinate destination = new Coordinate(8,15);
-		
 		path = currentView.findPath(destination);
+		// for testing path finding in View
 		Move.Action action = move.followPath(path, currentView);
 		System.out.println(action.toString());
 		move(action, delta);
@@ -60,18 +59,25 @@ public class MyAIController extends CarController{
 	private void move(Move.Action action, float delta) {
 		switch(action) {
 			case LEFT:
-				applyForwardAcceleration();
+				if(getSpeed() <= SPEED_LIM) {
+					applyForwardAcceleration();
+				}
 				turnLeft(delta);
 				break;
 			case RIGHT:
-				applyForwardAcceleration();
+				if(getSpeed() <= SPEED_LIM) {
+					applyForwardAcceleration();
+				}
 				turnRight(delta);
 				break;
 			case KEEPGOING:
 				move(this.lastAction, delta);
 				break;
 			case FORWARD:
-				applyForwardAcceleration();
+				
+				if(getSpeed() <= SPEED_LIM) {
+					applyForwardAcceleration();
+				}
 				break;
 			case BACKWARD:
 				applyReverseAcceleration();

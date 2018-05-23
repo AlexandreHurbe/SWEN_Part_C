@@ -32,14 +32,14 @@ public class Move {
     }
     
     private Action compareAngle(float carAngle, int goalAngle) {
-    	float diff = (float)goalAngle - carAngle;
-    	
-    	if(diff > 0) {
-    		return Action.LEFT;
-    	}else if(diff < 0) {
-    		return Action.RIGHT;
-    	}else {
+    	int diff = goalAngle - (int)carAngle;
+    	System.out.println(diff);
+    	if (diff == 0 || diff == 360) {
     		return Action.FORWARD;
+    	} else if(diff > 0 && diff < 180) {
+    		return Action.LEFT;
+    	}else {
+    		return Action.RIGHT;
     	}
     }
 }
