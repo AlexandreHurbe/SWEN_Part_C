@@ -21,7 +21,7 @@ public class MyAIController extends CarController{
 	private Float angle;
 	private HashMap<Coordinate, MyDirection.Direction> path;
 	private Move move;
-	private Move.Action lastAction = Move.Action.FORWARD;
+	private Move.Action lastAction;
 	private final float SPEED_LIM = (float) 4;
 	public MyAIController(Car car) {
 		super(car);	
@@ -43,18 +43,16 @@ public class MyAIController extends CarController{
 		
 		Coordinate destination = new Coordinate(8,15);
 		currentView.update(getView(), this.currentPos, this.angle);
+		// find the list of path given destination coordinates
 		path = currentView.findPath(destination);
-		// for testing path finding in View
-		
+
 		move.update(this.angle, this.currentPos);
+		// find the action to take by the car given this path
 		Move.Action action = move.followPath(path);
-		
-//		System.out.println(action.toString());
+		// perform this action 
 		move(action, delta);
 		
-		if(action != Move.Action.KEEPGOING) {
-			lastAction = action;
-		}
+
 		
 		
 		
@@ -64,7 +62,13 @@ public class MyAIController extends CarController{
 		this.currentPos = new Coordinate(getPosition());
 		this.angle = getAngle();
 	}
+	
 	private void move(Move.Action action, float delta) {
+		// solution when going off track
+		if(action != Move.Action.KEEPGOING) {
+			lastAction = action;
+		}
+		
 		switch(action) {
 			case LEFT:
 				if(getSpeed() <= SPEED_LIM) {
