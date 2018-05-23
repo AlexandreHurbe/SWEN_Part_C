@@ -14,19 +14,20 @@ import world.Car;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	private View currentView;
+	private final float SPEED_LIM = (float) 4.0;
+	
 	private IMoveStrategy currentStrategy;
-	private HashMap<Coordinate, MapTile> map;
+	
+	private View view;
 	private Coordinate currentPos;
 	private Float angle;
-	private HashMap<Coordinate, MyDirection.Direction> path;
 	private Move move;
 	private Move.Action lastAction;
-	private final float SPEED_LIM = (float) 4;
+
 	public MyAIController(Car car) {
 		super(car);	
-		map = getMap();
-		currentView = new View(map);
+
+		view = new View(getMap());
 		currentPos = new Coordinate(getPosition());
 		new Path();
 		move = new Move();
@@ -42,13 +43,11 @@ public class MyAIController extends CarController{
 		init();
 		
 		Coordinate destination = new Coordinate(8,15);
-		currentView.update(getView(), this.currentPos, this.angle);
+		view.update(getView(), this.currentPos, this.angle);
 		// find the list of path given destination coordinates
-		path = currentView.findPath(destination);
-
 		move.update(this.angle, this.currentPos);
 		// find the action to take by the car given this path
-		Move.Action action = move.followPath(path);
+		Move.Action action = move.followPath(view.findPath(destination));
 		// perform this action 
 		move(action, delta);
 		

@@ -16,11 +16,16 @@ import utilities.Coordinate;
 public class View  {
 	private HashMap<Coordinate, MapTile> currentView;
 	private HashMap<Coordinate, MapTile> map;
+	// this is the map to mark where the car has detected
+	private HashMap<Coordinate, MapTile> markMap;
 	private Coordinate currentPosition;
 	private float angle;
 	private final int INFINITY = Integer.MAX_VALUE;
+	private final int DETECTLENMIN = -4;
+	private final int DETECTLENMAX = 4;
 	public View(HashMap<Coordinate, MapTile> map) {
 		this.map = map;
+		this.markMap = this.map;
 	}
 	
 	public void lookForKey(List<Key> keys){
@@ -48,6 +53,7 @@ public class View  {
 		this.currentView = currentView;
 		this.currentPosition = myPosition;
 		this.angle = angle;
+		updateMarkMap();
 	}
 	
 	public Coordinate getPosition() {
@@ -56,6 +62,19 @@ public class View  {
 	public float getAngle() {
 		return angle;
 	}
+	public HashMap<Coordinate, MapTile> getMarkMap() {
+		return markMap;
+	}
+	// remove this coordinate 
+	private void updateMarkMap() {
+		for(int i = DETECTLENMIN; i<=DETECTLENMAX; i++) {
+			for(int j = DETECTLENMIN; j <=DETECTLENMAX; j++) {
+				Coordinate markCoord = new Coordinate(currentPosition.x +i, currentPosition.y+j);
+				this.markMap.remove(markCoord);
+			}
+		}
+	}
+	
 	// use A* to find path to destination
 	public HashMap<Coordinate, MyDirection.Direction> findPath(Coordinate destination) {
 		Coordinate start = currentPosition;
@@ -110,7 +129,7 @@ public class View  {
 		}
 		return null;
 	} 	
-
+	// help to initialize the Score set in A* search
 	private HashMap<Coordinate, Integer> initScore() {
 
 		Iterator<Coordinate> mapTiles = this.map.keySet().iterator();
@@ -128,7 +147,7 @@ public class View  {
 		return score;
 	}
 	
-
+	// help to initialize the mapping of final route
 	private HashMap<Coordinate, Coordinate> initMap() {
 		HashMap<Coordinate, Coordinate> mapping = new HashMap<>();
 		Iterator<Coordinate> mapTiles = this.map.keySet().iterator();
@@ -148,7 +167,7 @@ public class View  {
 		int estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
 		return estimateCost;
 	}
-	
+	// find the lowest costed neighbor node
 	private Coordinate lowestCost(List<Coordinate> openSet, HashMap<Coordinate, Integer> score) {
 		Iterator<Coordinate> setTiles = openSet.iterator();
 		int minCost = INFINITY;
@@ -164,7 +183,7 @@ public class View  {
 		}
 		return finalPos;
 	}
-	
+	// find neighbors of current coordinates
 	private List<Coordinate> findNeighbor(Coordinate current){
 		List<Coordinate> neighbors = new ArrayList<>();
 		for (int i =-1; i<=1; i++) {
@@ -184,6 +203,7 @@ public class View  {
 		return distance;
 	}
 	
+	// construct the rout to destination using this data structure
 	private HashMap<Coordinate, MyDirection.Direction> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
 		Stack<Coordinate> totalPath = new Stack<>();
 		totalPath.push(current);
