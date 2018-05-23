@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Table.Debug;
+
 import utilities.Coordinate;
 import world.WorldSpatial;
 
@@ -31,7 +33,8 @@ public class Path {
 			myPath.put(currentCoord, findDirection(currentCoord, nextCoord));
 			currentCoord = nextCoord;
 		}
-		System.out.println(myPath.toString());
+		
+//		System.out.println(myPath.toString());
 		return myPath;
 	}
 	
@@ -73,7 +76,7 @@ public class Path {
 		if(angle < 0) {
 			angle += 360;
 		}
-		System.out.println(angle);
+//		System.out.println(angle);
 		return angle;
 	}
 	

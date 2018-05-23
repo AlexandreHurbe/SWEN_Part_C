@@ -17,6 +17,7 @@ public class View  {
 	private HashMap<Coordinate, MapTile> currentView;
 	private HashMap<Coordinate, MapTile> map;
 	private Coordinate currentPosition;
+	private float angle;
 	private final int INFINITY = Integer.MAX_VALUE;
 	public View(HashMap<Coordinate, MapTile> map) {
 		this.map = map;
@@ -43,13 +44,17 @@ public class View  {
 		}
 	}
 	
-	public void update(HashMap<Coordinate, MapTile> currentView, Coordinate myPosition) {
+	public void update(HashMap<Coordinate, MapTile> currentView, Coordinate myPosition, Float angle) {
 		this.currentView = currentView;
 		this.currentPosition = myPosition;
+		this.angle = angle;
 	}
 	
 	public Coordinate getPosition() {
 		return currentPosition;
+	}
+	public float getAngle() {
+		return angle;
 	}
 	// use A* to find path to destination
 	public HashMap<Coordinate, MyDirection.Direction> findPath(Coordinate destination) {
@@ -189,6 +194,7 @@ public class View  {
 				totalPath.push(current);
 			}
 		}
+		System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
 		HashMap<Coordinate, MyDirection.Direction> myPath;
 		Path path = new Path();

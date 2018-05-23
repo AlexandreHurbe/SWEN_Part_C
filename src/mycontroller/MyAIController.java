@@ -21,6 +21,7 @@ public class MyAIController extends CarController{
 	private List<Key> keys;
 	private HashMap<Coordinate, MyDirection.Direction> path;
 	private Move move;
+	private Move.Action lastAction = Move.Action.FORWARD;
 	public MyAIController(Car car) {
 		super(car);	
 		map = getMap();
@@ -37,19 +38,46 @@ public class MyAIController extends CarController{
 		 *  Explore the map and record where the key is when sees a key
 		 *  
 		 */
-		currentView.update(getView(), new Coordinate(getPosition()));
+		currentView.update(getView(), new Coordinate(getPosition()), getAngle());
+		
 		// for testing path finding in View
 		Coordinate destination = new Coordinate(8,15);
-		HashMap<Coordinate, MyDirection.Direction> path = currentView.findPath(destination);
-		move.followPath(path, currentView);
-
+		
+		path = currentView.findPath(destination);
+		Move.Action action = move.followPath(path, currentView);
+		System.out.println(action.toString());
+		move(action, delta);
+		
+		if(action != Move.Action.KEEPGOING) {
+			lastAction = action;
+		}
 		
 		
 		
 	}
 	
 
-	private void move() {
-		
+	private void move(Move.Action action, float delta) {
+		switch(action) {
+			case LEFT:
+				applyForwardAcceleration();
+				turnLeft(delta);
+				break;
+			case RIGHT:
+				applyForwardAcceleration();
+				turnRight(delta);
+				break;
+			case KEEPGOING:
+				move(this.lastAction, delta);
+				break;
+			case FORWARD:
+				applyForwardAcceleration();
+				break;
+			case BACKWARD:
+				applyReverseAcceleration();
+				break;
+			default:
+				return;
+		}
 	}
 }
