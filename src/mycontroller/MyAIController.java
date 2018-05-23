@@ -19,12 +19,14 @@ public class MyAIController extends CarController{
 	private HashMap<Coordinate, MapTile> map;
 	private Coordinate currentPos;
 	private List<Key> keys;
-	private HashMap<Coordinate, WorldSpatial.Direction> path;
+	private HashMap<Coordinate, MyDirection.Direction> path;
+	private Path currentPath;
 	public MyAIController(Car car) {
 		super(car);	
 		map = getMap();
 		currentView = new View(map);
 		currentPos = new Coordinate(getPosition());
+		currentPath = new Path();
 	}
 	
 	@Override
@@ -36,9 +38,11 @@ public class MyAIController extends CarController{
 		 */
 		currentView.update(getView(), new Coordinate(getPosition()));
 		// for testing path finding in View
-//		Coordinate destination = new Coordinate(8,15);
-//		Stack<Coordinate> path = currentView.findPath(destination);
-
+		Coordinate destination = new Coordinate(8,15);
+		Stack<Coordinate> path = currentView.findPath(destination);
+		System.out.println(path.toString());
+		currentPath.updatePath(path);
+		this.path = currentPath.getPath();
 		
 		
 	}

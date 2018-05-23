@@ -180,7 +180,10 @@ public class View  {
 		totalPath.push(current);
 		while(mapping.containsKey(current)) {
 			current = mapping.get(current);
-			totalPath.push(current);
+			// fix starting at null
+			if(current != null) {
+				totalPath.push(current);
+			}
 		}
 		return totalPath;
 	}
