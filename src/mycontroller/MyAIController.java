@@ -20,13 +20,14 @@ public class MyAIController extends CarController{
 	private Coordinate currentPos;
 	private List<Key> keys;
 	private HashMap<Coordinate, MyDirection.Direction> path;
-	private Path currentPath;
+	private Move move;
 	public MyAIController(Car car) {
 		super(car);	
 		map = getMap();
 		currentView = new View(map);
 		currentPos = new Coordinate(getPosition());
-		currentPath = new Path();
+		new Path();
+		move = new Move();
 	}
 	
 	@Override
@@ -39,24 +40,16 @@ public class MyAIController extends CarController{
 		currentView.update(getView(), new Coordinate(getPosition()));
 		// for testing path finding in View
 		Coordinate destination = new Coordinate(8,15);
-		Stack<Coordinate> path = currentView.findPath(destination);
-		System.out.println(path.toString());
-		currentPath.updatePath(path);
-		this.path = currentPath.getPath();
+		HashMap<Coordinate, MyDirection.Direction> path = currentView.findPath(destination);
+		move.followPath(path, currentView);
+
+		
 		
 		
 	}
 	
-//	private boolean checkLeftWall() {
-//		Coordinate coord;
-//		for(int i = 0; i <=2; i++) {
-//			coord = new Coordinate(currentPos.x,currentPos.y+i);
-//			if(map.get(coord).isType(MapTile.Type.WALL)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 
-	
+	private void move() {
+		
+	}
 }

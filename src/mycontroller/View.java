@@ -47,8 +47,12 @@ public class View  {
 		this.currentView = currentView;
 		this.currentPosition = myPosition;
 	}
+	
+	public Coordinate getPosition() {
+		return currentPosition;
+	}
 	// use A* to find path to destination
-	public Stack<Coordinate> findPath(Coordinate destination) {
+	public HashMap<Coordinate, MyDirection.Direction> findPath(Coordinate destination) {
 		Coordinate start = currentPosition;
 		// tiles already been evaluated
 		List<Coordinate> closedSet = new ArrayList<>();
@@ -175,7 +179,7 @@ public class View  {
 		return distance;
 	}
 	
-	private Stack<Coordinate> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
+	private HashMap<Coordinate, MyDirection.Direction> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
 		Stack<Coordinate> totalPath = new Stack<>();
 		totalPath.push(current);
 		while(mapping.containsKey(current)) {
@@ -185,6 +189,11 @@ public class View  {
 				totalPath.push(current);
 			}
 		}
-		return totalPath;
+		// Formulate Path to be used by move
+		HashMap<Coordinate, MyDirection.Direction> myPath;
+		Path path = new Path();
+		path.updatePath(totalPath);
+		myPath = path.getPath();
+		return myPath;
 	}
 }
