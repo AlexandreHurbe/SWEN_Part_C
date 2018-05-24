@@ -91,6 +91,13 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
+<<<<<<< HEAD
 
 	
+=======
+	/*
+	private void checkNextMove(float delta) {
+		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
+	}*/
+>>>>>>> 064739303428b0612ee7f96eae39cf05b507e7db
 }
