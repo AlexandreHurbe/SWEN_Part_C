@@ -29,7 +29,6 @@ public class MyAIController extends CarController{
 	private PathFinding pathFinding;
 	private HashMap<Coordinate, Float> path;
 
-	private IMoveStrategy strategy;
 	public MyAIController(Car car) {
 		super(car);	
 		myMap.setOriginalMap(getMap());
@@ -58,7 +57,6 @@ public class MyAIController extends CarController{
 		
 
 		pathFinding = new PathFinding(this);
-		destination = strategy.getDestination();
 		path = pathFinding.findPath(destination);
 		
 		
