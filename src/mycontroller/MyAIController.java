@@ -44,14 +44,12 @@ public class MyAIController extends CarController{
 //		Move.Action action = move.followPath(path);
 //		// perform this action 
 //		move(action, delta);
-		
 		try {
 			pathFinding = new PathFinding(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		path = pathFinding.findPath();
 		
 		
@@ -64,8 +62,14 @@ public class MyAIController extends CarController{
 		Coordinate currentCoord = new Coordinate(getPosition());
 		
 		float goalAngle = path.get(currentCoord);
-		int diff = (int)goalAngle - (int)this.getAngle();
+
+		int diff =  (int)this.getAngle()- (int)goalAngle;
+		System.out.println("diff:" + diff);
+		System.out.println("goalAngle: " + goalAngle);
+		System.out.println("carAngle: " + getAngle());
+
 		
+
 		WorldSpatial.RelativeDirection dir = getDirection(diff);
 		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
 
@@ -74,6 +78,10 @@ public class MyAIController extends CarController{
 		System.out.println("Diff: " + diff);
 		if(hitWall) {
 			System.out.println("Wall has been hit");
+		}
+		if(!nextTuple.getReachable()) {
+			// slow down and turn
+
 			applyReverseAcceleration();
 		}
 		else {
@@ -81,7 +89,8 @@ public class MyAIController extends CarController{
 				// slow down and turn
 				applyReverseAcceleration();
 				hitWall = true;
-			} else {
+			} 
+			else {
 				hitWall = false;
 				if(diff==0 ) {
 					applyForwardAcceleration();
@@ -90,14 +99,21 @@ public class MyAIController extends CarController{
 		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
 		    		accelerate();
 		    		turnLeft(delta);
-		    	}else {
+		    	}
+		    	else {
 		    		accelerate();
 		    		turnRight(delta);
 		    	}
 			}
-			
+	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
+	    		accelerate();
+	    		turnLeft(delta);
+	    	}
+	    	else {
+	    		accelerate();
+	    		turnRight(delta);
+	    	}
 		}
-
 	}
 	
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
