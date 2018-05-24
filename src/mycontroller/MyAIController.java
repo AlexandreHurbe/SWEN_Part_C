@@ -45,7 +45,12 @@ public class MyAIController extends CarController{
 //		move(action, delta);
 		
 
-		pathFinding = new PathFinding(this);
+		try {
+			pathFinding = new PathFinding(this);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		path = pathFinding.findPath();
 		
 		
@@ -58,20 +63,22 @@ public class MyAIController extends CarController{
 		Coordinate currentCoord = new Coordinate(getPosition());
 		
 		float goalAngle = path.get(currentCoord);
-		float diff = goalAngle - this.getAngle();
+		int diff =  (int)this.getAngle()- (int)goalAngle;
+		System.out.println("diff:" + diff);
+		System.out.println("goalAngle: " + goalAngle);
+		System.out.println("carAngle: " + getAngle());
 		WorldSpatial.RelativeDirection dir = getDirection(diff);
 		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
 		
 		if(!nextTuple.getReachable()) {
 			// slow down and turn
-			applyBrake();
 			applyReverseAcceleration();
 		} else {
 			
 			if(diff == 0 || diff == 360) {
 				applyForwardAcceleration();
 			}
-	    	if(diff > 0 && diff < 180) {
+	    	if(diff > 0 && diff <= 180) {
 	    		accelerate();
 	    		turnLeft(delta);
 	    	}else {
