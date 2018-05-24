@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
+import utilities.PeekTuple;
 import world.Car;
 import world.WorldSpatial;
 
@@ -98,4 +99,8 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
+	/*
+	private void checkNextMove(float delta) {
+		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
+	}*/
 }

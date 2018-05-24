@@ -10,9 +10,11 @@ import utilities.Coordinate;
 
 public class LowHealthExplore extends ExploreStrategy{
 	
+	private HashMap<Coordinate, MapTile> markMap;
+	
 	public Coordinate explore(View currentView) {
 //		System.out.println("start explore key");
-		HashMap<Coordinate, MapTile> markMap = currentView.getMarkMap();
+		markMap = currentView.getMarkMap();
 		Coordinate currentPosition = currentView.getPosition();
 //		System.out.println(markMap.toString());
 		Coordinate coord;
@@ -41,10 +43,14 @@ public class LowHealthExplore extends ExploreStrategy{
 		return null;
 	}
 	
-	public Coordinate lowestCost(List<Coordinate> openSet, HashMap<Coordinate, Integer> score) {
-		Iterator<Coordinate> setTiles = openSet.iterator();
-		
-		
-		return null;
+	public int estimateCost(Coordinate start, Coordinate destination) {
+		int estimateCost;
+		if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
+			estimateCost = 100;
+		}
+		else {
+			estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+		}
+		return estimateCost;
 	}
 }
