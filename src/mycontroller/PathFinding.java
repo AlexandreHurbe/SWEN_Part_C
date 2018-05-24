@@ -15,6 +15,7 @@ public class PathFinding {
 	MyMap myMap = MyMap.getInstance();
 	IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
+	private Coordinate destination;
 	
 	
 	public PathFinding(MyAIController controller) {
@@ -26,6 +27,7 @@ public class PathFinding {
 			e.printStackTrace();
 		}
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
+		this.destination = this.strategy.getDestination();
 	}
 	
 	private IMoveStrategy chooseStrategy() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
