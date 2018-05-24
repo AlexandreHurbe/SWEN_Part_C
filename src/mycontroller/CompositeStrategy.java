@@ -1,9 +1,10 @@
 package mycontroller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CompositeStrategy implements IMoveStrategy{
-	private List<IMoveStrategy> strategies;
+	private List<IMoveStrategy> strategies = new ArrayList<>();
 	public CompositeStrategy() {
 		
 	}

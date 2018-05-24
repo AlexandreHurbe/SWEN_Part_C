@@ -18,19 +18,17 @@ public class MyAIController extends CarController{
 	
 	private IMoveStrategy currentStrategy;
 	
-	private View view;
+	private View view = new View(getMap());
 	private Coordinate currentPos;
 	private Float angle;
-	private Move move;
+	private Move move = new Move();
 	private Move.Action lastAction;
-
+	private HashMap<Coordinate, MyDirection.Direction> path;
+	private ExploreStrategy explore = new ExploreStrategy();
+	private Coordinate destination;
 	public MyAIController(Car car) {
 		super(car);	
-
-		view = new View(getMap());
-		currentPos = new Coordinate(getPosition());
-		new Path();
-		move = new Move();
+		
 	}
 	
 	@Override
@@ -41,13 +39,16 @@ public class MyAIController extends CarController{
 		 *  
 		 */
 		init();
-		
-		Coordinate destination = new Coordinate(8,15);
-		view.update(getView(), this.currentPos, this.angle);
+//		Coordinate destination = new Coordinate(5,10);
+		this.view.update(getView(), this.currentPos, this.angle);
+//		this.destination = this.explore.exploreKey(view);
+		Coordinate destination = new Coordinate(5,17);
+		path = view.findPath(destination);
 		// find the list of path given destination coordinates
-		move.update(this.angle, this.currentPos);
+		this.move.update(this.angle, this.currentPos);
 		// find the action to take by the car given this path
-		Move.Action action = move.followPath(view.findPath(destination));
+		
+		Move.Action action = move.followPath(path);
 		// perform this action 
 		move(action, delta);
 		

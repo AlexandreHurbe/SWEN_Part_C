@@ -15,9 +15,10 @@ import utilities.Coordinate;
  */
 public class View  {
 	private HashMap<Coordinate, MapTile> currentView;
-	private HashMap<Coordinate, MapTile> map;
+	
 	// this is the map to mark where the car has detected
 	private HashMap<Coordinate, MapTile> markMap;
+	private HashMap<Coordinate, MapTile> map;
 	private Coordinate currentPosition;
 	private float angle;
 	private final int INFINITY = Integer.MAX_VALUE;
@@ -25,7 +26,7 @@ public class View  {
 	private final int DETECTLENMAX = 4;
 	public View(HashMap<Coordinate, MapTile> map) {
 		this.map = map;
-		this.markMap = this.map;
+		this.markMap = initMarkMap(map);
 	}
 	
 	public void lookForKey(List<Key> keys){
@@ -53,7 +54,8 @@ public class View  {
 		this.currentView = currentView;
 		this.currentPosition = myPosition;
 		this.angle = angle;
-		updateMarkMap();
+		updateMap();
+		System.out.println("update mark map success");
 	}
 	
 	public Coordinate getPosition() {
@@ -63,16 +65,37 @@ public class View  {
 		return angle;
 	}
 	public HashMap<Coordinate, MapTile> getMarkMap() {
-		return markMap;
+		return this.markMap;
 	}
-	// remove this coordinate 
-	private void updateMarkMap() {
-		for(int i = DETECTLENMIN; i<=DETECTLENMAX; i++) {
-			for(int j = DETECTLENMIN; j <=DETECTLENMAX; j++) {
-				Coordinate markCoord = new Coordinate(currentPosition.x +i, currentPosition.y+j);
-				this.markMap.remove(markCoord);
+	public HashMap<Coordinate, MapTile> getMap() {
+		return this.map;
+	}
+	private void updateMap() {
+		Iterator<Coordinate> viewCoords = currentView.keySet().iterator();
+		Coordinate coord;
+		MapTile actualTile;
+		while(viewCoords.hasNext()) {
+			coord = viewCoords.next();
+			actualTile = currentView.get(coord);
+			this.map.put(coord, actualTile);
+			this.markMap.put(coord, actualTile);
+		}
+	}
+	// set all road to null
+	private HashMap<Coordinate, MapTile> initMarkMap(HashMap<Coordinate, MapTile> map) {
+		HashMap<Coordinate, MapTile> markMap = map;
+		Iterator<Coordinate> allCoords = map.keySet().iterator();
+
+		Coordinate coord;
+		while(allCoords.hasNext()) {
+			coord = allCoords.next();
+			if(map.get(coord).isType(MapTile.Type.ROAD)) {
+				markMap.put(coord, null);
 			}
 		}
+		
+		return markMap;
+		
 	}
 	
 	// use A* to find path to destination
@@ -156,6 +179,7 @@ public class View  {
 		while(mapTiles.hasNext()) {
 			coord = mapTiles.next();
 			tile = this.map.get(coord);
+			System.out.println(tile.toString());
 			if(!tile.isType(MapTile.Type.WALL)) {
 				mapping.put(coord, null);
 			}
