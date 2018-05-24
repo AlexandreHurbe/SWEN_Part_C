@@ -2,6 +2,7 @@ package mycontroller;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import tiles.HealthTrap;
 import tiles.MapTile;
@@ -39,5 +40,11 @@ public class LowHealthExplore extends ExploreStrategy{
 		}
 		return null;
 	}
-
+	
+	public Coordinate lowestCost(List<Coordinate> openSet, HashMap<Coordinate, Integer> score) {
+		Iterator<Coordinate> setTiles = openSet.iterator();
+		
+		
+		return null;
+	}
 }
