@@ -232,7 +232,7 @@ public class View  {
 		return distance;
 	}
 	
-	// construct the rout to destination using this data structure
+	// construct the route to destination using this data structure
 	private HashMap<Coordinate, Float> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
 		Stack<Coordinate> totalPath = new Stack<>();
 		totalPath.push(current);
