@@ -9,7 +9,7 @@ public class Move {
 	enum Action { FORWARD, BACKWARD, LEFT, RIGHT, KEEPGOING}
 	private float carAngle;
 	private Coordinate currentPos;
-    public Move(){
+    public Move() {
        
     }
     public void update(float angle, Coordinate coord) {
@@ -17,11 +17,11 @@ public class Move {
     	this.currentPos = coord;
     }
     // return a direction to turn or not 
-    public Action followPath(HashMap<Coordinate, MyDirection.Direction> path) {
+    public Action followPath(HashMap<Coordinate, Float> path) {
 //    	System.out.println(path.toString());
 //    	System.out.println(view.getPosition().toString());
 
-    	MyDirection.Direction direction;
+
     	float goalAngle;
 //    	System.out.println(path.containsKey(currentPos));
     	if(!path.containsKey(currentPos)) {
@@ -29,9 +29,8 @@ public class Move {
     		return Action.KEEPGOING;
     	}
     	else {
-    		direction = path.get(currentPos);
-    		goalAngle = MyDirection.coupleDirection.get(direction);
 
+    		goalAngle = path.get(currentPos);
     		return compareAngle(goalAngle);
     	}
     }

@@ -23,7 +23,7 @@ public class MyAIController extends CarController{
 	private Float angle;
 	private Move move = new Move();
 	private Move.Action lastAction;
-	private HashMap<Coordinate, MyDirection.Direction> path;
+	private HashMap<Coordinate, Float> path;
 	private ExploreStrategy explore = new ExploreStrategy();
 	private Coordinate destination;
 	public MyAIController(Car car) {

@@ -100,7 +100,7 @@ public class View  {
 	}
 	
 	// use A* to find path to destination
-	public HashMap<Coordinate, MyDirection.Direction> findPath(Coordinate destination) {
+	public HashMap<Coordinate, Float> findPath(Coordinate destination) {
 		Coordinate start = currentPosition;
 		// tiles already been evaluated
 		List<Coordinate> closedSet = new ArrayList<>();
@@ -233,7 +233,7 @@ public class View  {
 	}
 	
 	// construct the rout to destination using this data structure
-	private HashMap<Coordinate, MyDirection.Direction> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
+	private HashMap<Coordinate, Float> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
 		Stack<Coordinate> totalPath = new Stack<>();
 		totalPath.push(current);
 		while(mapping.containsKey(current)) {
@@ -246,7 +246,7 @@ public class View  {
 
 //		System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
-		HashMap<Coordinate, MyDirection.Direction> myPath;
+		HashMap<Coordinate, Float> myPath;
 		Path path = new Path();
 		path.updatePath(totalPath);
 		myPath = path.getPath();

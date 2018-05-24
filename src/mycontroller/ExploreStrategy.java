@@ -8,7 +8,7 @@ import tiles.MapTile;
 import utilities.Coordinate;
 
 public class ExploreStrategy implements IMoveStrategy {
-	private final int MAXMAP = 100;
+
 	@Override
 	public void move() {
 		// TODO Auto-generated method stub
