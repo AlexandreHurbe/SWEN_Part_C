@@ -1,29 +1,18 @@
 package mycontroller;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Stack;
-
-import com.badlogic.gdx.math.Interpolation.Exp;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-
 import controller.CarController;
-import tiles.MapTile;
 import utilities.Coordinate;
-import utilities.PeekTuple;
 import world.Car;
-import world.WorldSpatial;
 
 public class MyAIController extends CarController{
 	private final float SPEED_LIM = (float) 2;
 	
 
 
-	private Move move = new Move();
+	private Move move;
 	private Move.Action lastAction;
 //	private HashMap<Coordinate, Float> path;
-	private Coordinate destination;
 	
 	private MyMap myMap = MyMap.getInstance();
 	private PathFinding pathFinding;
@@ -57,9 +46,9 @@ public class MyAIController extends CarController{
 		
 
 		pathFinding = new PathFinding(this);
-		path = pathFinding.findPath(destination);
+		path = pathFinding.findPath();
 		
-		
+		move = new Move(getAngle(), new Coordinate(this.getPosition()));
 		Move.Action action = move.followPath(path);
 		
 		move(action, delta);
@@ -108,12 +97,10 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
-<<<<<<< HEAD
+
 	/*
 	private void checkNextMove(float delta) {
 		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
 	}*/
-=======
-	
->>>>>>> 0e6fd601e62d1d5453af2e0a19fe3809ce346dfc
+
 }

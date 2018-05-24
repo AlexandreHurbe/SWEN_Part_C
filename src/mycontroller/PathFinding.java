@@ -20,12 +20,13 @@ public class PathFinding {
 	
 	public PathFinding(MyAIController controller) {
 		// TODO Auto-generated constructor stub
-		try {
-			this.strategy = chooseStrategy();
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		try {
+//			this.strategy = chooseStrategy();
+//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		this.strategy = new ExploreStrategy();
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
 	}
@@ -35,7 +36,7 @@ public class PathFinding {
 	}
 	
 	// use A* to find path to destination
-	public HashMap<Coordinate, Float> findPath(Coordinate destination) {
+	public HashMap<Coordinate, Float> findPath() {
 		Coordinate start = myMap.getPosition();
 		// tiles already been evaluated
 		List<Coordinate> closedSet = new ArrayList<>();

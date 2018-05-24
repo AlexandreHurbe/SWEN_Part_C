@@ -9,13 +9,11 @@ public class Move {
 	enum Action { FORWARD, BACKWARD, LEFT, RIGHT, KEEPGOING}
 	private float carAngle;
 	private Coordinate currentPos;
-    public Move() {
-       
-    }
-    public void update(float angle, Coordinate coord) {
-    	this.carAngle = angle;
+    public Move(float angle, Coordinate coord) {
+       	this.carAngle = angle;
     	this.currentPos = coord;
     }
+
     // return a direction to turn or not 
     public Action followPath(HashMap<Coordinate, Float> path) {
 //    	System.out.println(path.toString());
