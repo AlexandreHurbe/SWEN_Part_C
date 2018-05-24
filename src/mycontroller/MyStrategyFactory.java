@@ -4,7 +4,7 @@ package mycontroller;
  * 
  */
 public class MyStrategyFactory {
-	static MyStrategyFactory instance;
+	private static MyStrategyFactory instance = new MyStrategyFactory();
 	
 	
 	public static MyStrategyFactory getInstance() {
@@ -12,6 +12,7 @@ public class MyStrategyFactory {
 	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		
 		try {
 			Class<?> clazz = Class.forName(strategyName);
 			IMoveStrategy strategy = (IMoveStrategy) clazz.newInstance();

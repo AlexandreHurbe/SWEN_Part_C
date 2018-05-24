@@ -26,13 +26,12 @@ public class PathFinding {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		this.strategy = new ExploreStrategy();
-		//this.strategy = chooseStrategy(controller);
+		//this.strategy = new ExploreStrategy();
+		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
-	
-	
 	}
+	
 	private IMoveStrategy chooseStrategy(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		if (controller.getHealth() < 40) {
 			return factory.getMoveStrategy("LowHealthExplore");
