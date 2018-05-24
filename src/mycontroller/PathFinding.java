@@ -29,6 +29,8 @@ public class PathFinding {
 		this.strategy = new ExploreStrategy();
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
+		myMap.setOriginalMap(controller.getMap());
+		
 		
 	}
 	
