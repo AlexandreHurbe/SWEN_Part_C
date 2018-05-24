@@ -29,11 +29,13 @@ public class PathFinding {
 		this.strategy = new ExploreStrategy();
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
+		
 	}
 	
 	private IMoveStrategy chooseStrategy() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		return factory.getMoveStrategy("ExploreStrategy");
 	}
+	
 	
 	// use A* to find path to destination
 	public HashMap<Coordinate, Float> findPath() {

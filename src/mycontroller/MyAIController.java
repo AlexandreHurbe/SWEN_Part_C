@@ -48,7 +48,7 @@ public class MyAIController extends CarController{
 		pathFinding = new PathFinding(this);
 		path = pathFinding.findPath();
 		
-		move = new Move(getAngle(), new Coordinate(this.getPosition()));
+		move = new Move(this);
 		Move.Action action = move.followPath(path);
 		
 		move(action, delta);
@@ -91,16 +91,6 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
-<<<<<<< HEAD
-=======
 
->>>>>>> 2097ce4f68cb5a6ee92bc009aa33ff65ebb07f45
-	/*
-	private void checkNextMove(float delta) {
-		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
-	}*/
-<<<<<<< HEAD
-=======
 
->>>>>>> 2097ce4f68cb5a6ee92bc009aa33ff65ebb07f45
 }
