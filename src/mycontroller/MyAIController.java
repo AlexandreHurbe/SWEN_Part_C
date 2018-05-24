@@ -14,7 +14,7 @@ import world.Car;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 4.0;
+	private final float SPEED_LIM = (float) 3.0;
 	
 	private IMoveStrategy currentStrategy;
 	
@@ -41,8 +41,8 @@ public class MyAIController extends CarController{
 		init();
 //		Coordinate destination = new Coordinate(5,10);
 		this.view.update(getView(), this.currentPos, this.angle);
-//		this.destination = this.explore.exploreKey(view);
-		Coordinate destination = new Coordinate(5,17);
+		this.destination = this.explore.exploreKey(view);
+//		Coordinate destination = new Coordinate(5,17);
 		path = view.findPath(destination);
 		// find the list of path given destination coordinates
 		this.move.update(this.angle, this.currentPos);

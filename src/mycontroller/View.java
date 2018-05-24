@@ -55,7 +55,7 @@ public class View  {
 		this.currentPosition = myPosition;
 		this.angle = angle;
 		updateMap();
-		System.out.println("update mark map success");
+//		System.out.println("update mark map success");
 	}
 	
 	public Coordinate getPosition() {
@@ -83,7 +83,8 @@ public class View  {
 	}
 	// set all road to null
 	private HashMap<Coordinate, MapTile> initMarkMap(HashMap<Coordinate, MapTile> map) {
-		HashMap<Coordinate, MapTile> markMap = map;
+		@SuppressWarnings("unchecked")
+		HashMap<Coordinate, MapTile> markMap = (HashMap<Coordinate, MapTile>) map.clone();
 		Iterator<Coordinate> allCoords = map.keySet().iterator();
 
 		Coordinate coord;
@@ -179,7 +180,7 @@ public class View  {
 		while(mapTiles.hasNext()) {
 			coord = mapTiles.next();
 			tile = this.map.get(coord);
-			System.out.println(tile.toString());
+//			System.out.println(((MapTile)tile).getType().toString());
 			if(!tile.isType(MapTile.Type.WALL)) {
 				mapping.put(coord, null);
 			}
@@ -238,7 +239,8 @@ public class View  {
 				totalPath.push(current);
 			}
 		}
-		System.out.println(totalPath.toString());
+
+//		System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
 		HashMap<Coordinate, MyDirection.Direction> myPath;
 		Path path = new Path();
