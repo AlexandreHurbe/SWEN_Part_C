@@ -7,17 +7,22 @@ import world.WorldSpatial;
 
 public class Move {
 	enum Action { FORWARD, BACKWARD, LEFT, RIGHT, KEEPGOING}
+	private float carAngle;
+	private Coordinate currentPos;
     public Move(){
        
     }
+    public void update(float angle, Coordinate coord) {
+    	this.carAngle = angle;
+    	this.currentPos = coord;
+    }
     // return a direction to turn or not 
-    public Action followPath(HashMap<Coordinate, MyDirection.Direction> path, View view) {
+    public Action followPath(HashMap<Coordinate, MyDirection.Direction> path) {
 //    	System.out.println(path.toString());
 //    	System.out.println(view.getPosition().toString());
-    	Coordinate currentPos = view.getPosition();
+
     	MyDirection.Direction direction;
-    	float carAngle;
-    	int goalAngle;
+    	float goalAngle;
 //    	System.out.println(path.containsKey(currentPos));
     	if(!path.containsKey(currentPos)) {
     		
@@ -26,13 +31,13 @@ public class Move {
     	else {
     		direction = path.get(currentPos);
     		goalAngle = MyDirection.coupleDirection.get(direction);
-    		carAngle = view.getAngle();
-    		return compareAngle(carAngle, goalAngle);
+
+    		return compareAngle(goalAngle);
     	}
     }
     
-    private Action compareAngle(float carAngle, int goalAngle) {
-    	int diff = goalAngle - (int)carAngle;
+    private Action compareAngle(float goalAngle) {
+    	float diff = goalAngle - this.carAngle;
     	System.out.println(diff);
     	if (diff == 0 || diff == 360) {
     		return Action.FORWARD;

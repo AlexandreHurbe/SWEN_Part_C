@@ -14,19 +14,20 @@ import world.Car;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	private View currentView;
+	private final float SPEED_LIM = (float) 4.0;
+	
 	private IMoveStrategy currentStrategy;
-	private HashMap<Coordinate, MapTile> map;
+	
+	private View view;
 	private Coordinate currentPos;
-	private List<Key> keys;
-	private HashMap<Coordinate, MyDirection.Direction> path;
+	private Float angle;
 	private Move move;
-	private Move.Action lastAction = Move.Action.FORWARD;
-	private final float SPEED_LIM = (float) 4;
+	private Move.Action lastAction;
+
 	public MyAIController(Car car) {
 		super(car);	
-		map = getMap();
-		currentView = new View(map);
+
+		view = new View(getMap());
 		currentPos = new Coordinate(getPosition());
 		new Path();
 		move = new Move();
@@ -39,24 +40,34 @@ public class MyAIController extends CarController{
 		 *  Explore the map and record where the key is when sees a key
 		 *  
 		 */
-		currentView.update(getView(), new Coordinate(getPosition()), getAngle());
+		init();
+		
 		Coordinate destination = new Coordinate(8,15);
-		path = currentView.findPath(destination);
-		// for testing path finding in View
-		Move.Action action = move.followPath(path, currentView);
-		System.out.println(action.toString());
+		view.update(getView(), this.currentPos, this.angle);
+		// find the list of path given destination coordinates
+		move.update(this.angle, this.currentPos);
+		// find the action to take by the car given this path
+		Move.Action action = move.followPath(view.findPath(destination));
+		// perform this action 
 		move(action, delta);
 		
-		if(action != Move.Action.KEEPGOING) {
-			lastAction = action;
-		}
+
 		
 		
 		
 	}
 	
-
+	private void init() {
+		this.currentPos = new Coordinate(getPosition());
+		this.angle = getAngle();
+	}
+	
 	private void move(Move.Action action, float delta) {
+		// solution when going off track
+		if(action != Move.Action.KEEPGOING) {
+			lastAction = action;
+		}
+		
 		switch(action) {
 			case LEFT:
 				if(getSpeed() <= SPEED_LIM) {
