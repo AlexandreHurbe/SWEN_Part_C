@@ -40,7 +40,7 @@ public class Path {
 	
 	private MyDirection.Direction findDirection(Coordinate current, Coordinate next) {
 		int degree = getAngle(current, next);
-		System.out.println(degree);
+//		System.out.println(degree);
 		switch(degree) {
 			case MyDirection.EAST_DEGREE_MAX:
 				return MyDirection.Direction.EAST;

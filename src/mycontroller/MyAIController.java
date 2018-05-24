@@ -14,7 +14,7 @@ import world.Car;
 import world.WorldSpatial;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 3.0;
+	private final float SPEED_LIM = (float) 2;
 	
 	private IMoveStrategy currentStrategy;
 	

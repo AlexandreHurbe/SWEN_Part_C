@@ -214,17 +214,20 @@ public class View  {
 		List<Coordinate> neighbors = new ArrayList<>();
 		for (int i =-1; i<=1; i++) {
 			for(int j =-1; j<=1; j++) {
-				Coordinate coord = new Coordinate(current.x+i, current.y+j);
-				MapTile tile = this.map.get(coord);
-				if(!tile.isType(MapTile.Type.WALL) && !coord.equals(current)) {
-					neighbors.add(coord);
+				if(Math.abs(i)!=Math.abs(j)) {
+					Coordinate coord = new Coordinate(current.x+i, current.y+j);
+					MapTile tile = this.map.get(coord);
+					if(!tile.isType(MapTile.Type.WALL) && !coord.equals(current)) {
+						neighbors.add(coord);
+					}
 				}
 			}
+				
 		}
 		return neighbors;
 	}
 	// actual distance between 2 coordinates
-	private int distance(Coordinate from, Coordinate to) {
+	public int distance(Coordinate from, Coordinate to) {
 		int distance = Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
 		return distance;
 	}

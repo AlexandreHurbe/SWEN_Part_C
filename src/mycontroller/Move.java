@@ -38,7 +38,7 @@ public class Move {
     
     private Action compareAngle(float goalAngle) {
     	float diff = goalAngle - this.carAngle;
-    	System.out.println(diff);
+//    	System.out.println(diff);
     	if (diff == 0 || diff == 360) {
     		return Action.FORWARD;
     	} else if(diff > 0 && diff < 180) {

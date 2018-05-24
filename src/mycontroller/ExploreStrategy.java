@@ -18,15 +18,18 @@ public class ExploreStrategy implements IMoveStrategy {
 //	public abstract void explore(View currentView, Float health);
 	
 	public Coordinate exploreKey(View currentView) {
-		System.out.println("start explore key");
+//		System.out.println("start explore key");
 		HashMap<Coordinate, MapTile> markMap = currentView.getMarkMap();
-		System.out.println(markMap.toString());
+		Coordinate currentPosition = currentView.getPosition();
+//		System.out.println(markMap.toString());
 		Coordinate coord;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
+//		System.out.println(markMap.keySet());
+
 		while(mark.hasNext()) {
 			
 			coord = mark.next();
-			System.out.println(coord);
+//			System.out.println(coord);
 //			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) == null) {
 				System.out.println("found destination" + coord.toString());
@@ -38,5 +41,5 @@ public class ExploreStrategy implements IMoveStrategy {
 		System.out.println("found no key");
 		return null;
 	}
-
+	
 }
