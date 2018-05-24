@@ -63,12 +63,6 @@ public class MyAIController extends CarController{
 		Move.Action action = move.followPath(path);
 		
 		move(action, delta);
-		
-		
-
-		
-		
-		
 	}
 	
 
@@ -108,12 +102,8 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
-<<<<<<< HEAD
 	/*
 	private void checkNextMove(float delta) {
 		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
 	}*/
-=======
-	
->>>>>>> 0e6fd601e62d1d5453af2e0a19fe3809ce346dfc
 }
