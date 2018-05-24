@@ -8,10 +8,6 @@ import world.Car;
 public class MyAIController extends CarController{
 	private final float SPEED_LIM = (float) 2;
 	
-
-
-	private Move move;
-	private Move.Action lastAction;
 //	private HashMap<Coordinate, Float> path;
 	
 	private MyMap myMap = MyMap.getInstance();
@@ -48,15 +44,13 @@ public class MyAIController extends CarController{
 		pathFinding = new PathFinding(this);
 		path = pathFinding.findPath();
 		
-		move = new Move(this);
-		Move.Action action = move.followPath(path);
 		
-		move(action, delta);
+		move(delta);
 	}
 	
 
 	
-	private void move(Move.Action action, float delta) {
+	private void move(float delta) {
 		// solution when going off track
 		if(action != Move.Action.KEEPGOING) {
 			lastAction = action;
@@ -92,5 +86,11 @@ public class MyAIController extends CarController{
 		}
 	}
 
+
+	
+	/*
+	private void checkNextMove(float delta) {
+		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
+	}*/
 
 }

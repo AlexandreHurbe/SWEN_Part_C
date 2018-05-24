@@ -24,7 +24,7 @@ public class LowHealthExplore extends ExploreStrategy{
 
 		while(mark.hasNext()) {
 			coord = mark.next();
-//			System.out.println(coord);
+			//System.out.println("Found health");
 //			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) instanceof HealthTrap) {
 				System.out.println("found health at: " + coord.toString());
@@ -46,13 +46,26 @@ public class LowHealthExplore extends ExploreStrategy{
 	
 	public int estimateCost(Coordinate start, Coordinate destination) {
 		int estimateCost;
-		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
-		if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
-			estimateCost = 100;
+		try {
+			HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
+				estimateCost = 1000;
+			}
+			else {
+				estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+			}
+			return estimateCost;
 		}
-		else {
-			estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+		catch (NullPointerException e){
+			HashMap<Coordinate, MapTile> markMap = myMap.getMap();
+			if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
+				estimateCost = 1000;
+			}
+			else {
+				estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+			}
+			return estimateCost;
 		}
-		return estimateCost;
+		
+		
 	}
 }
