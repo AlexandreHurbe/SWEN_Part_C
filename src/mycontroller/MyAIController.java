@@ -3,16 +3,20 @@ package mycontroller;
 import java.util.HashMap;
 import controller.CarController;
 import utilities.Coordinate;
+import utilities.PeekTuple;
 import world.Car;
+import world.WorldSpatial;
+import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 2;
+	private final float SPEED_LIM = (float) 0.5;
 	
 //	private HashMap<Coordinate, Float> path;
 	
 	private MyMap myMap = MyMap.getInstance();
 	private PathFinding pathFinding;
 	private HashMap<Coordinate, Float> path;
+	
 
 	public MyAIController(Car car) {
 		super(car);	
@@ -51,43 +55,51 @@ public class MyAIController extends CarController{
 
 	
 	private void move(float delta) {
-		// solution when going off track
-		if(action != Move.Action.KEEPGOING) {
-			lastAction = action;
+		Coordinate currentCoord = new Coordinate(getPosition());
+		
+		float goalAngle = path.get(currentCoord);
+		float diff = goalAngle - this.getAngle();
+		WorldSpatial.RelativeDirection dir = getDirection(diff);
+		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
+		
+		if(!nextTuple.getReachable()) {
+			// slow down and turn
+			applyBrake();
+			applyReverseAcceleration();
+		} else {
+			
+			if(diff == 0 || diff == 360) {
+				applyForwardAcceleration();
+			}
+	    	if(diff > 0 && diff < 180) {
+	    		accelerate();
+	    		turnLeft(delta);
+	    	}else {
+	    		accelerate();
+	    		turnRight(delta);
+	    	}
 		}
 		
-		switch(action) {
-			case LEFT:
-				if(getSpeed() <= SPEED_LIM) {
-					applyForwardAcceleration();
-				}
-				turnLeft(delta);
-				break;
-			case RIGHT:
-				if(getSpeed() <= SPEED_LIM) {
-					applyForwardAcceleration();
-				}
-				turnRight(delta);
-				break;
-			case KEEPGOING:
-				move(this.lastAction, delta);
-				break;
-			case FORWARD:
-				
-				if(getSpeed() <= SPEED_LIM) {
-					applyForwardAcceleration();
-				}
-				break;
-			case BACKWARD:
-				applyReverseAcceleration();
-				break;
-			default:
-				return;
+		
+
+	}
+	
+	 private WorldSpatial.RelativeDirection getDirection(float diff) {
+	    	if(diff >= 0 && diff < 180) {
+	    		return RelativeDirection.LEFT;
+	    	}else {
+	    		return RelativeDirection.RIGHT;
+	    	}
+	    }
+	private void accelerate() {
+		if(getSpeed() < SPEED_LIM) {
+			applyForwardAcceleration();
+		}
+		else {
+			applyBrake();
+
 		}
 	}
-
-
-	
 	/*
 	private void checkNextMove(float delta) {
 		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)

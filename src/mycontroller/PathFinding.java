@@ -29,7 +29,7 @@ public class PathFinding {
 		this.strategy = new ExploreStrategy();
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
-		myMap.setOriginalMap(controller.getMap());
+	
 		
 		
 	}
@@ -184,7 +184,7 @@ public class PathFinding {
 			}
 		}
 
-//		System.out.println(totalPath.toString());
+		System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
 		HashMap<Coordinate, Float> myPath;
 		Path path = new Path();
