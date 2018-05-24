@@ -12,9 +12,16 @@ public class MyStrategyFactory {
 	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		String classname = strategyName;
-		IMoveStrategy strategy = new ExploreStrategy();
-		return strategy;
+		try {
+			Class<?> clazz = Class.forName(strategyName);
+			IMoveStrategy strategy = (IMoveStrategy) clazz.newInstance();
+			return strategy;
+		}
+		catch (ClassNotFoundException e) {
+			System.out.println("The given strategy was not given, returning explore strategy");
+			IMoveStrategy strategy = new ExploreStrategy();
+			return strategy;
+		}
 	}
 	
 //	public IMoveStrategy getCompositeStrategy() {
