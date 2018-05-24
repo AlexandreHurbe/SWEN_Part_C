@@ -36,8 +36,25 @@ public class MyMap {
 	
 	public void setOriginalMap(HashMap<Coordinate, MapTile> map) {
 		this.map = map;
+		this.markMap = initMarkMap(map);
 	}
-	
+	// initialize markMap
+	private HashMap<Coordinate, MapTile> initMarkMap(HashMap<Coordinate, MapTile> map) {
+		@SuppressWarnings("unchecked")
+		HashMap<Coordinate, MapTile> markMap = (HashMap<Coordinate, MapTile>) map.clone();
+		Iterator<Coordinate> allCoords = map.keySet().iterator();
+
+		Coordinate coord;
+		while(allCoords.hasNext()) {
+			coord = allCoords.next();
+			if(map.get(coord).isType(MapTile.Type.ROAD)) {
+				markMap.put(coord, null);
+			}
+		}
+		
+		return markMap;
+		
+	}
 	public void update(Coordinate position, HashMap<Coordinate, MapTile> view) {
 		this.position = position;
 		updateMap(view);
@@ -50,8 +67,21 @@ public class MyMap {
 		while(viewCoords.hasNext()) {
 			coord = viewCoords.next();
 			actualTile = view.get(coord);
+			
 			this.map.put(coord, actualTile);
 			this.markMap.put(coord, actualTile);
 		}
+	}
+	
+	public Coordinate getPosition() {
+		return this.position;
+	}
+	
+	public HashMap<Coordinate, MapTile> getMap() {
+		return this.map;
+	}
+	
+	public HashMap<Coordinate, MapTile> getMarkMap() {
+		return this.markMap;
 	}
 }
