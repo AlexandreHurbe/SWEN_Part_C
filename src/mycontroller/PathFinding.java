@@ -26,7 +26,7 @@ public class PathFinding {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		this.strategy =  new LowHealthExplore();
+		this.strategy =  new ExploreStrategy();
 		//this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();

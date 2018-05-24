@@ -2,6 +2,7 @@ package mycontroller;
 
 import java.util.HashMap;
 import controller.CarController;
+import tiles.MapTile;
 import utilities.Coordinate;
 import utilities.PeekTuple;
 import world.Car;
@@ -9,14 +10,14 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 3;
+	private final float SPEED_LIM = (float) 2.5;
 	
 //	private HashMap<Coordinate, Float> path;
 	
 	private MyMap myMap = MyMap.getInstance();
 	private PathFinding pathFinding;
 	private HashMap<Coordinate, Float> path;
-	
+	private boolean hitWall = false;
 
 	public MyAIController(Car car) {
 		super(car);	
@@ -67,33 +68,40 @@ public class MyAIController extends CarController{
 		
 		WorldSpatial.RelativeDirection dir = getDirection(diff);
 		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
+
 		System.out.println("Goal: " + goalAngle);
 		System.out.println("Car: " + getAngle());
 		System.out.println("Diff: " + diff);
-		if(!nextTuple.getReachable()) {
-			// slow down and turn
-			applyBrake();
+		if(hitWall) {
+			System.out.println("Wall has been hit");
 			applyReverseAcceleration();
-		} else {
-
-			if(diff==0 ) {
-				applyForwardAcceleration();
-			}
-	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-	    		accelerate();
-	    		turnLeft(delta);
-	    	}else {
-	    		accelerate();
-	    		turnRight(delta);
-	    	}
 		}
-		
-		
+		else {
+			if(!nextTuple.getReachable() && checkAroundWall()) {
+				// slow down and turn
+				applyReverseAcceleration();
+				hitWall = true;
+			} else {
+				hitWall = false;
+				if(diff==0 ) {
+					applyForwardAcceleration();
+					
+				}
+		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
+		    		accelerate();
+		    		turnLeft(delta);
+		    	}else {
+		    		accelerate();
+		    		turnRight(delta);
+		    	}
+			}
+			
+		}
 
 	}
 	
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
-	    	if(diff >= 0 && diff < 180) {
+	    	if(diff >= 0 && diff < 180 || diff>-360 && diff < -180) {
 	    		return RelativeDirection.LEFT;
 	    	}else {
 	    		return RelativeDirection.RIGHT;
@@ -107,6 +115,19 @@ public class MyAIController extends CarController{
 			applyBrake();
 
 		}
+	}
+	
+	private boolean checkAroundWall() {
+		Coordinate currentCoord = new Coordinate(getPosition());
+		for(int i= -1; i < 1;i++) {
+			for(int j= -1; j < 1;j++) {
+				Coordinate newCoord = new Coordinate(currentCoord.x+i,currentCoord.y +j);
+				if(myMap.getMap().get(newCoord).isType(MapTile.Type.WALL)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	/*
 	private void checkNextMove(float delta) {
