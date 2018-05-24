@@ -18,7 +18,7 @@ public class PathFinding {
 	private Coordinate destination;
 	
 	
-	public PathFinding(MyAIController controller) {
+	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		// TODO Auto-generated constructor stub
 //		try {
 //			this.strategy = chooseStrategy();
@@ -26,7 +26,7 @@ public class PathFinding {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		this.strategy = new ExploreStrategy();
+		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
 		myMap.setOriginalMap(controller.getMap());
@@ -34,8 +34,13 @@ public class PathFinding {
 		
 	}
 	
-	private IMoveStrategy chooseStrategy() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		return factory.getMoveStrategy("ExploreStrategy");
+	private IMoveStrategy chooseStrategy(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if (controller.getHealth() < 40) {
+			return factory.getMoveStrategy("LowHealthExplore");
+		}
+		else {
+			return factory.getMoveStrategy("ExploreStrategy");
+		}
 	}
 	
 	
