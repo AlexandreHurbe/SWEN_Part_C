@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
+import com.badlogic.gdx.math.Interpolation.Exp;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 import controller.CarController;
@@ -17,19 +18,21 @@ import world.WorldSpatial;
 public class MyAIController extends CarController{
 	private final float SPEED_LIM = (float) 2;
 	
-	private IMoveStrategy currentStrategy;
-	
-	private View view = new View(getMap());
-	private Coordinate currentPos;
-	private Float angle;
+
+
 	private Move move = new Move();
 	private Move.Action lastAction;
-	private HashMap<Coordinate, Float> path;
-	private ExploreStrategy explore = new ExploreStrategy();
+//	private HashMap<Coordinate, Float> path;
 	private Coordinate destination;
+	
+	private MyMap myMap = MyMap.getInstance();
+	private PathFinding pathFinding;
+	private HashMap<Coordinate, Float> path;
+
+	private IMoveStrategy strategy;
 	public MyAIController(Car car) {
 		super(car);	
-		
+		myMap.setOriginalMap(getMap());
 	}
 	
 	@Override
@@ -39,19 +42,30 @@ public class MyAIController extends CarController{
 		 *  Explore the map and record where the key is when sees a key
 		 *  
 		 */
-		init();
-//		Coordinate destination = new Coordinate(5,10);
-		this.view.update(getView(), this.currentPos, this.angle);
-		this.destination = this.explore.exploreKey(view);
-//		Coordinate destination = new Coordinate(5,17);
-		path = view.findPath(destination);
-		// find the list of path given destination coordinates
-		this.move.update(this.angle, this.currentPos);
-		// find the action to take by the car given this path
+//		init();
+////		Coordinate destination = new Coordinate(5,10);
+//		this.view.update(getView(), this.currentPos, this.angle);
+//		this.destination = this.explore.exploreKey(view);
+////		Coordinate destination = new Coordinate(5,17);
+//		path = view.findPath(destination);
+//		// find the list of path given destination coordinates
+//		this.move.update(this.angle, this.currentPos);
+//		// find the action to take by the car given this path
+//		
+//		Move.Action action = move.followPath(path);
+//		// perform this action 
+//		move(action, delta);
+		
+
+		pathFinding = new PathFinding(this);
+		destination = strategy.getDestination();
+		path = pathFinding.findPath(destination);
+		
 		
 		Move.Action action = move.followPath(path);
-		// perform this action 
+		
 		move(action, delta);
+		
 		
 
 		
@@ -59,10 +73,7 @@ public class MyAIController extends CarController{
 		
 	}
 	
-	private void init() {
-		this.currentPos = new Coordinate(getPosition());
-		this.angle = getAngle();
-	}
+
 	
 	private void move(Move.Action action, float delta) {
 		// solution when going off track
@@ -99,8 +110,12 @@ public class MyAIController extends CarController{
 				return;
 		}
 	}
+<<<<<<< HEAD
 	/*
 	private void checkNextMove(float delta) {
 		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)
 	}*/
+=======
+	
+>>>>>>> 0e6fd601e62d1d5453af2e0a19fe3809ce346dfc
 }

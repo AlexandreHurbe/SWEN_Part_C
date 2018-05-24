@@ -13,11 +13,25 @@ import utilities.Coordinate;
 public class PathFinding {
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();
+	IMoveStrategy strategy;
+	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	
-	public PathFinding(HashMap<Coordinate, MapTile> map) {
+	
+	public PathFinding(MyAIController controller) {
 		// TODO Auto-generated constructor stub
-		myMap.setOriginalMap(map);
+		try {
+			this.strategy = chooseStrategy();
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 	}
+	
+	private IMoveStrategy chooseStrategy() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		return factory.getMoveStrategy("ExploreStrategy");
+	}
+	
 	// use A* to find path to destination
 	public HashMap<Coordinate, Float> findPath(Coordinate destination) {
 		Coordinate start = myMap.getPosition();
@@ -38,7 +52,7 @@ public class PathFinding {
 		// passing by this node
 		HashMap<Coordinate, Integer> fScore = initScore();
 		// calculate the estimateCost for start point to goal
-		fScore.put(start, estimateCost(start, destination));
+		fScore.put(start, strategy.estimateCost(start, destination));
 		
 		//
 		while(!openSet.isEmpty()) {
@@ -67,7 +81,7 @@ public class PathFinding {
 				}
 				cameFrom.put(neighbor, current);
 				gScore.put(neighbor, combinedGscore);
-				fScore.put(neighbor, gScore.get(neighbor) + estimateCost(neighbor, destination));
+				fScore.put(neighbor, gScore.get(neighbor) + strategy.estimateCost(neighbor, destination));
 			}
 		}
 		return null;
@@ -107,11 +121,11 @@ public class PathFinding {
 		}
 		return mapping;
 	}
-	// basic heuristic function for 2 coordinates
-	private int estimateCost(Coordinate start, Coordinate destination) {
-		int estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
-		return estimateCost;
-	}
+//	// basic heuristic function for 2 coordinates
+//	private int estimateCost(Coordinate start, Coordinate destination) {
+//		int estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+//		return estimateCost;
+//	}
 	// find the lowest costed neighbor node
 	private Coordinate lowestCost(List<Coordinate> openSet, HashMap<Coordinate, Integer> score) {
 		Iterator<Coordinate> setTiles = openSet.iterator();
@@ -171,5 +185,7 @@ public class PathFinding {
 		myPath = path.getPath();
 		return myPath;
 	}
+	
+	
 }
 

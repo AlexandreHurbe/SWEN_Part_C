@@ -15,7 +15,7 @@ public class Path {
 //	public void updatePath(HashMap<Coordinate, MyDirection.Direction> path) {
 //		this.currentPath = path;
 //	}
-
+	
 	public void updatePath(Stack<Coordinate> totalPath) {
 		this.currentPath = fomulatePath(totalPath);
 	}

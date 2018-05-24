@@ -9,6 +9,7 @@ public class Key {
 	private int keyNumber;
 	private Coordinate coord;	
 	
+	
 	public void setKey(int Keynumber, Coordinate coord) {
 		this.keyNumber = Keynumber;
 		this.coord = coord;
