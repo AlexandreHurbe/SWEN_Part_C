@@ -9,7 +9,7 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 0.5;
+	private final float SPEED_LIM = (float) 3;
 	
 //	private HashMap<Coordinate, Float> path;
 	
@@ -44,8 +44,13 @@ public class MyAIController extends CarController{
 //		// perform this action 
 //		move(action, delta);
 		
-
-		pathFinding = new PathFinding(this);
+		try {
+			pathFinding = new PathFinding(this);
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		path = pathFinding.findPath();
 		
 		
@@ -58,20 +63,23 @@ public class MyAIController extends CarController{
 		Coordinate currentCoord = new Coordinate(getPosition());
 		
 		float goalAngle = path.get(currentCoord);
-		float diff = goalAngle - this.getAngle();
+		int diff = (int)goalAngle - (int)this.getAngle();
+		
 		WorldSpatial.RelativeDirection dir = getDirection(diff);
 		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
-		
+		System.out.println("Goal: " + goalAngle);
+		System.out.println("Car: " + getAngle());
+		System.out.println("Diff: " + diff);
 		if(!nextTuple.getReachable()) {
 			// slow down and turn
 			applyBrake();
 			applyReverseAcceleration();
 		} else {
-			
-			if(diff == 0 || diff == 360) {
+
+			if(diff==0 ) {
 				applyForwardAcceleration();
 			}
-	    	if(diff > 0 && diff < 180) {
+	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
 	    		accelerate();
 	    		turnLeft(delta);
 	    	}else {
