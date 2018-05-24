@@ -184,6 +184,7 @@ public class View  {
 			if(!tile.isType(MapTile.Type.WALL)) {
 				mapping.put(coord, null);
 			}
+			
 		}
 		return mapping;
 	}
