@@ -14,20 +14,16 @@ import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
 
-
-
 	private float SPEED_LIM = 3f;
-
-
 	private static final float MAX_DEGREES = 360;
 	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 2f;
-	private boolean SHOULD_SPEED = false;	
-
+	private boolean SHOULD_SPEED = false;
+	
 
 	private final float TURN_SPEED_LIM = 1f;
-
-	
+	public int keysRemaining;
+	public int keysToCollect = getKey();
 //	private HashMap<Coordinate, Float> path;
 	
 	private MyMap myMap = MyMap.getInstance();
@@ -42,6 +38,8 @@ public class MyAIController extends CarController{
 	
 	@Override
 	public void update(float delta) {
+		keysRemaining = getKey();
+		//System.out.println("++++++++++++++++++++++++Key remain: " + keysRemaining);
 		// TODO Auto-generated method stub
 		/*
 		 *  Explore the map and record where the key is when sees a key
@@ -69,67 +67,73 @@ public class MyAIController extends CarController{
 		path = pathFinding.findPath();
 		
 		
-		move(delta);
+		alexMove(delta);
 	}
 	
 
 	
-	private void move(float delta) {
+	private void alexMove(float delta) {
 		//System.out.println(path.toString());
 		Coordinate currentCoord = new Coordinate(getPosition());
-		float goalAngle = path.get(currentCoord);
-		float currentAngle = this.getAngle();
-		int deltaAngle = (int)goalAngle - (int)currentAngle;
-		SHOULD_SPEED = false;
-		System.out.println(deltaAngle);
-		if (4 > deltaAngle && deltaAngle >= 0 || -359 == deltaAngle) {
-			Coordinate nextCoord = checkNextCoord(currentCoord, delta);
-			//Coordinate previousCoord = currentCoord;
-			for (int i = 0; i < 3; i ++) {
-				if (path.containsKey(nextCoord)) {
-					float nextAngle = path.get(nextCoord);
-					//System.out.println(nextAngle-currentAngle);
-					currentAngle = nextAngle;
-					currentCoord = nextCoord;
-					nextCoord = checkNextCoord(nextCoord, delta);
-				}
-				else {
-					for (int x = -1; x < 2; x++) {
-						for (int y = -1; y < 2; y++) {
-							if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
-								nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
-								if (path.containsKey(nextCoord)) {
-									this.SPEED_LIM = SLOW_SPEED;
-									accelerate();
+		if (path.containsKey(currentCoord)) {
+			float goalAngle = path.get(currentCoord);
+			float currentAngle = this.getAngle();
+			int deltaAngle = (int)goalAngle - (int)currentAngle;
+			SHOULD_SPEED = false;
+			//System.out.println(deltaAngle);
+			if (4 > deltaAngle && deltaAngle >= 0 || -359 >= deltaAngle && deltaAngle < -355) {
+				Coordinate nextCoord = checkNextCoord(currentCoord, delta);
+				//Coordinate previousCoord = currentCoord;
+				for (int i = 0; i < 3; i ++) {
+					if (path.containsKey(nextCoord)) {
+						float nextAngle = path.get(nextCoord);
+						//System.out.println(nextAngle-currentAngle);
+						currentAngle = nextAngle;
+						currentCoord = nextCoord;
+						nextCoord = checkNextCoord(nextCoord, delta);
+					}
+					else {
+						for (int x = -1; x < 2; x++) {
+							for (int y = -1; y < 2; y++) {
+								if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
+									nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
+									if (path.containsKey(nextCoord)) {
+										this.SPEED_LIM = SLOW_SPEED;
+										accelerate();
+									}
+									
 								}
-								
 							}
 						}
 					}
 				}
+				
+				SHOULD_SPEED = true;
+				if (SHOULD_SPEED = true){
+					//System.out.println("The car should go faster");
+					this.SPEED_LIM = MAX_SPEED;
+					accelerate();
+				}
 			}
-			
-			SHOULD_SPEED = true;
-			if (SHOULD_SPEED = true){
-				//System.out.println("The car should go faster");
-				this.SPEED_LIM = MAX_SPEED;
-				accelerate();
+			else {
+				this.SPEED_LIM = SLOW_SPEED;
+				if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
+					accelerate();
+					turnLeft(delta);
+		    	}
+		    	else {
+		    		accelerate();
+		    		turnRight(delta);
+		    	}
+			}
+			if(getSpeed() == 0) {
+				applyReverseAcceleration();
 			}
 		}
 		else {
-			this.SPEED_LIM = SLOW_SPEED;
-			if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
-				accelerate();
-				turnLeft(delta);
-	    	}
-	    	else {
-	    		accelerate();
-	    		turnRight(delta);
-	    	}
+			accelerate();
 		}
-		if(getSpeed() == 0) {
-			applyReverseAcceleration();
-		}
+		
 	}
 	
 	private Coordinate checkNextCoord(Coordinate currentCoord, float delta) {
@@ -148,7 +152,6 @@ public class MyAIController extends CarController{
 		acceleration.rotate(0);
 		acceleration.scl(drivingForce);
 
-
 		Vector2 friction = new Vector2(1,0);
 		if(acceleration.len() > 0){
 			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
@@ -156,17 +159,8 @@ public class MyAIController extends CarController{
 			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
 		}
 		friction.scl(frictionForce);
+		Vector2 netAcceleration = acceleration.add(friction);
 
-
-		Vector2 friction1 = new Vector2(1,0);
-		if(acceleration.len() > 0){
-			friction1.rotate(acceleration.angle() - MAX_DEGREES/2);
-		} else {
-			friction1.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
-		}
-		friction1.scl(frictionForce);
-
-		Vector2 netAcceleration = acceleration.add(friction1);
 		return netAcceleration;
 	}
 

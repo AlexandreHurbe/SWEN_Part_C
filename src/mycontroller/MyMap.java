@@ -9,8 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+
 import javax.print.attribute.standard.Destination;
 
+
+import javax.print.attribute.standard.Destination;
+
+import tiles.LavaTrap;
 import tiles.MapTile;
 import tiles.MapTile.Type;
 import utilities.Coordinate;
@@ -30,6 +35,7 @@ public class MyMap {
 	private HashMap<Coordinate, MapTile> markMap;
 	private HashMap<Coordinate, MapTile> map;
 	private Coordinate position;
+	private HashMap<Integer, Coordinate> keyStorage = new HashMap<Integer, Coordinate>();
 	
 	
 	private MyMap() {
@@ -125,18 +131,13 @@ public class MyMap {
 			return null;
 	}
 					
-	
-	
 
-
-
-	
-	
 	public void update(Coordinate position, HashMap<Coordinate, MapTile> view) {
 		this.position = position;
 		updateMap(view);
 		
 	}
+	
 	private void updateMap(HashMap<Coordinate, MapTile> view) {
 		Iterator<Coordinate> viewCoords = view.keySet().iterator();
 		Coordinate coord;
@@ -144,10 +145,22 @@ public class MyMap {
 		while(viewCoords.hasNext()) {
 			coord = viewCoords.next();
 			actualTile = view.get(coord);
-			
+			if (actualTile instanceof LavaTrap) {
+				int keyNum = ((LavaTrap)actualTile).getKey();
+				if ( keyNum > 0 && !keyStorage.containsKey(keyNum)) {
+					keyStorage.put(keyNum, coord);
+					System.out.println("Add key: " + ((LavaTrap)actualTile).getKey() + " at " + coord.toString());
+				}
+			}
 			this.map.put(coord, actualTile);
 			this.markMap.put(coord, actualTile);
 		}
+	}
+	
+		
+	
+	public HashMap<Integer, Coordinate>returnKeyStorage() {
+			return this.keyStorage;
 	}
 	
 	public Coordinate getPosition() {
