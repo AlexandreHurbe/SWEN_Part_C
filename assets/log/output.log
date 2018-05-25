@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2018-05-25 13:20:39 INFO  Car - Speed:   0.0; Angle:   0.0; Position:   1,1; Key:  5; Health: 100.0; Tile: START
 2018-05-25 13:20:39 INFO  Car - Speed:   0.0; Angle:   0.0; Position:   1,1; Key:  5; Health: 100.0; Tile: START
 2018-05-25 13:20:39 INFO  Car - Speed:   0.1; Angle:   3.3; Position:   1,1; Key:  5; Health: 100.0; Tile: START
@@ -646,3 +647,5 @@
 2018-05-25 13:20:53 INFO  Car - Speed:   3.0; Angle:   0.0; Position: 12,31; Key:  5; Health:  80.0; Tile: ROAD
 2018-05-25 13:20:53 INFO  Car - Speed:   3.0; Angle:   0.0; Position: 12,31; Key:  5; Health:  80.0; Tile: ROAD
 2018-05-25 13:20:53 INFO  Car - Speed:   3.0; Angle:   0.0; Position: 12,31; Key:  5; Health:  80.0; Tile: ROAD
+=======
+>>>>>>> 6a94b3ea5ff9819281c6adc4309705a7b60ccec5
