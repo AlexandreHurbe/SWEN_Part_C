@@ -10,7 +10,7 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = 3f;
+	private final float SPEED_LIM = 4f;
 	private final float TURN_SPEED_LIM = 1f;
 	
 //	private HashMap<Coordinate, Float> path;
@@ -22,7 +22,7 @@ public class MyAIController extends CarController{
 
 	public MyAIController(Car car) {
 		super(car);	
-		myMap.setOriginalMap(getMap());
+		myMap.setOriginalMap(getMap(), new Coordinate(getPosition()));
 	}
 	
 	@Override
@@ -149,7 +149,7 @@ public class MyAIController extends CarController{
 	private void moveForward(float diff, float delta) {
 		if(diff == 0 || diff == 360) {
 			accelerate();
-		} else if(diff > 0 && diff <=180 ||  diff >-360 && diff <= -180) {
+		} else if(diff > 0 && diff <180 ||  diff >-360 && diff <= -180) {
 			accelerate();
 			turnLeft(delta);
 		} else {
