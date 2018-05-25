@@ -1,6 +1,9 @@
 package mycontroller;
 
 import java.util.HashMap;
+
+import com.badlogic.gdx.math.Vector2;
+
 import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -10,8 +13,20 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = 3f;
+
+
+
+	private float SPEED_LIM = 3f;
+
+
+	private static final float MAX_DEGREES = 360;
+	private static final float MAX_SPEED = 3f;
+	private static final float SLOW_SPEED = 2f;
+	private boolean SHOULD_SPEED = false;	
+
+
 	private final float TURN_SPEED_LIM = 1f;
+
 	
 //	private HashMap<Coordinate, Float> path;
 	
@@ -22,7 +37,7 @@ public class MyAIController extends CarController{
 
 	public MyAIController(Car car) {
 		super(car);	
-		myMap.setOriginalMap(getMap());
+		myMap.setOriginalMap(getMap(), new Coordinate(getPosition()));
 	}
 	
 	@Override
@@ -60,92 +75,116 @@ public class MyAIController extends CarController{
 
 	
 	private void move(float delta) {
+		//System.out.println(path.toString());
 		Coordinate currentCoord = new Coordinate(getPosition());
-		
 		float goalAngle = path.get(currentCoord);
-
-		int diff =   (int)goalAngle - (int)this.getAngle();
-		System.out.println("diff:" + diff);
-		System.out.println("goalAngle: " + goalAngle);
-		System.out.println("carAngle: " + getAngle());
-
-		
-
-		WorldSpatial.RelativeDirection dir = getDirection(diff);
-		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
-
-		System.out.println("Goal: " + goalAngle);
-		System.out.println("Car: " + getAngle());
-		System.out.println("Diff: " + diff);
-//		if(!nextTuple.getReachable()) {
-//			// slow down and turn
-//
-//			applyReverseAcceleration();
-//		}
-//		else {
-//			if(!nextTuple.getReachable() && checkAroundWall()) {
-//				// slow down and turn
-//				applyReverseAcceleration();
-//				hitWall = true;
-//			} 
-//			else {
-//				hitWall = false;
-//				if(diff==0 ) {
-//					applyForwardAcceleration();
-//					
-//				}
-//		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-//		    		accelerate();
-//		    		turnLeft(delta);
-//		    	}
-//		    	else {
-//		    		accelerate();
-//		    		turnRight(delta);
-//		    	}
-//			}
-//	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-//	    		accelerate();
-//	    		turnLeft(delta);
-//	    	}
-//	    	else {
-//	    		accelerate();
-//	    		turnRight(delta);
-//	    	}
-//		}
-		
-		if(!hitWall) {
-			moveForward(diff, delta);
-			if(!path.containsKey(nextTuple.getCoordinate()) || getSpeed() == 0) {
-				applyReverseAcceleration();
-	
+		float currentAngle = this.getAngle();
+		int deltaAngle = (int)goalAngle - (int)currentAngle;
+		SHOULD_SPEED = false;
+		System.out.println(deltaAngle);
+		if (4 > deltaAngle && deltaAngle >= 0 || -359 == deltaAngle) {
+			Coordinate nextCoord = checkNextCoord(currentCoord, delta);
+			//Coordinate previousCoord = currentCoord;
+			for (int i = 0; i < 3; i ++) {
+				if (path.containsKey(nextCoord)) {
+					float nextAngle = path.get(nextCoord);
+					//System.out.println(nextAngle-currentAngle);
+					currentAngle = nextAngle;
+					currentCoord = nextCoord;
+					nextCoord = checkNextCoord(nextCoord, delta);
+				}
+				else {
+					for (int x = -1; x < 2; x++) {
+						for (int y = -1; y < 2; y++) {
+							if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
+								nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
+								if (path.containsKey(nextCoord)) {
+									this.SPEED_LIM = SLOW_SPEED;
+									accelerate();
+								}
+								
+							}
+						}
+					}
+				}
 			}
-			if(!path.containsKey(nextTuple.getCoordinate()) && getSpeed() == 0) {
-
-				hitWall = true;
-			}
-		} 
-		else {
-			if(getSpeed() < 0.5) {
-				applyReverseAcceleration();
-			}
-			else {
-				hitWall = false;
+			
+			SHOULD_SPEED = true;
+			if (SHOULD_SPEED = true){
+				//System.out.println("The car should go faster");
+				this.SPEED_LIM = MAX_SPEED;
+				accelerate();
 			}
 		}
-		
-
+		else {
+			this.SPEED_LIM = SLOW_SPEED;
+			if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
+				accelerate();
+				turnLeft(delta);
+	    	}
+	    	else {
+	    		accelerate();
+	    		turnRight(delta);
+	    	}
+		}
+		if(getSpeed() == 0) {
+			applyReverseAcceleration();
+		}
 	}
+	
+	private Coordinate checkNextCoord(Coordinate currentCoord, float delta) {
+		Vector2 netAcceleration = calculateAcceleration(2f, 0.5f);
+		float nextVelocityX = getVelocity().x + netAcceleration.x * delta;
+		float nextVelocityY = getVelocity().y + netAcceleration.y * delta;
+		int nextX = (int) ((int)currentCoord.x +  nextVelocityX * delta);
+		int nextY = (int) ((int)currentCoord.x +  nextVelocityY * delta);
+		Coordinate nextCoord = new Coordinate(nextX, nextY);
+		return nextCoord;
+	}
+	
+	private Vector2 calculateAcceleration(float drivingForce, float frictionForce){
+
+		Vector2 acceleration = new Vector2(1,0);
+		acceleration.rotate(0);
+		acceleration.scl(drivingForce);
+
+
+		Vector2 friction = new Vector2(1,0);
+		if(acceleration.len() > 0){
+			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
+		} else {
+			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
+		}
+		friction.scl(frictionForce);
+
+
+		Vector2 friction1 = new Vector2(1,0);
+		if(acceleration.len() > 0){
+			friction1.rotate(acceleration.angle() - MAX_DEGREES/2);
+		} else {
+			friction1.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
+		}
+		friction1.scl(frictionForce);
+
+		Vector2 netAcceleration = acceleration.add(friction1);
+		return netAcceleration;
+	}
+
+	
 	 private void adjustPosition(){
 		// move towards where we suppose to go
 		 
 	 }
+
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
 	    	if(diff > 0) {
 	    		return RelativeDirection.LEFT;
-	    	}else {
+	    	}
+	    	else {
 	    		return RelativeDirection.RIGHT;
 	    	}
-	    }
+	 }
+
 	private void moveForward(float diff, float delta) {
 		if(diff == 0 || diff == 360) {
 			accelerate();
@@ -158,6 +197,7 @@ public class MyAIController extends CarController{
 		}
 
 	}
+
 	private void accelerate() {
 		if(getSpeed() < SPEED_LIM) {
 			applyForwardAcceleration();
