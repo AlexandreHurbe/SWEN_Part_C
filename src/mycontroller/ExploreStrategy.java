@@ -22,22 +22,25 @@ public class ExploreStrategy implements IMoveStrategy {
 		Coordinate coord = null, minCoord = null;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 //		System.out.println(markMap.keySet());
-		int minDist = Integer.MAX_VALUE;
-		while(mark.hasNext()) {
-			
-			coord = mark.next();
-			
-//			System.out.println(coord);
-//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
-			if(markMap.get(coord) == null) {
-				//System.out.println("found destination" + coord.toString());
-				this.coord = coord;
-				int distance = estimateCost(myMap.getPosition(), coord);
-				if(distance < minDist) {
-					minCoord = coord;
-					minDist = distance;
+		int minDist = Integer.MIN_VALUE;
+		if(!reachedDest()) {
+			minCoord = findDest();
+		}else {
+			while(mark.hasNext()) {
+				
+				coord = mark.next();
+				
+	//			System.out.println(coord);
+	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
+				if(markMap.get(coord) == null) {
+					this.coord = coord;
+					int distance = estimateCost(myMap.getPosition(), coord);
+					if(distance > minDist) {
+						minCoord = coord;
+						minDist = distance;
+					}
+	
 				}
-
 			}
 		}
 
@@ -45,17 +48,50 @@ public class ExploreStrategy implements IMoveStrategy {
 
 		//System.out.println("found destination" + minCoord.toString());
 
-		
+		System.out.println("found destination" + minCoord.toString());
 		return minCoord;
-
+		
 
 	}
-
+	private boolean reachedDest() {
+		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
+		Iterator<Coordinate> mark = markMap.keySet().iterator();
+		Coordinate coord;
+		while(mark.hasNext()) {
+			
+			coord = mark.next();
+			MapTile tile = markMap.get(coord);
+			if(tile != null) {
+				if(tile.getType().equals(MapTile.Type.FINISH)) {
+					return true;
+				}
+			}
+		
+		}
+		return false;
+	}
+	private Coordinate findDest() {
+		HashMap<Coordinate, MapTile> map = myMap.getMap();
+		Iterator<Coordinate> mark = map.keySet().iterator();
+		Coordinate coord = null;
+		while(mark.hasNext()) {
+			
+			coord = mark.next();
+			MapTile tile = map.get(coord);
+			if(tile != null) {
+				if(tile.getType().equals(MapTile.Type.FINISH)) {
+					return coord;
+				}
+			}
+		}
+		return coord;
+	}
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		// make health smaller and 
-		int estimateCost = Math.abs(coord.x - start.x) + Math.abs(coord.y - start.y);
+//		System.out.println(start.toString()+ en);
+		int estimateCost = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
 		return estimateCost;
 
@@ -65,7 +101,7 @@ public class ExploreStrategy implements IMoveStrategy {
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		int lava = 5;
-		int health = -1;
+		int health = -5;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;

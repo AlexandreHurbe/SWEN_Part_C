@@ -9,6 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
+
+import javax.print.attribute.standard.Destination;
+
+
 import javax.print.attribute.standard.Destination;
 
 import tiles.LavaTrap;
@@ -127,7 +131,7 @@ public class MyMap {
 			return null;
 	}
 					
-	
+
 	public void update(Coordinate position, HashMap<Coordinate, MapTile> view) {
 		this.position = position;
 		updateMap(view);
@@ -170,4 +174,5 @@ public class MyMap {
 	public HashMap<Coordinate, MapTile> getMarkMap() {
 		return this.markMap;
 	}
+
 }
