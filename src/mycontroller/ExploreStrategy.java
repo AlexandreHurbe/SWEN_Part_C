@@ -3,6 +3,7 @@ package mycontroller;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -18,31 +19,58 @@ public class ExploreStrategy implements IMoveStrategy {
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
 //		Coordinate currentPosition = myMap.getPosition();
 //		System.out.println(markMap.toString());
-		Coordinate coord;
+		Coordinate coord = null;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 //		System.out.println(markMap.keySet());
-
+		int minDist = Integer.MAX_VALUE;
 		while(mark.hasNext()) {
 			
 			coord = mark.next();
+			
 //			System.out.println(coord);
 //			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) == null) {
-				System.out.println("found destination" + coord.toString());
 				this.coord = coord;
-				return coord;
+				int distance = Math.abs(coord.x - myMap.getPosition().x) + Math.abs(coord.y - myMap.getPosition().y);
+				if(distance < minDist) {
+					this.coord = coord;
+					minDist = distance;
+				}
+
 			}
 		}
-		System.out.println("found no key");
-		return null;
+		System.out.println("found destination" + this.coord.toString());
+		
+		return this.coord;
+
+
 	}
 
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
+		// make health smaller and 
 		int estimateCost = Math.abs(coord.x - start.x) + Math.abs(coord.y - start.y);
+		
 		return estimateCost;
 
 	}
+
+	@Override
+	public int distance(Coordinate start, Coordinate end) {
+		// TODO Auto-generated method stub
+		int lava = 2;
+		int health = -1;
+		int cost = estimateCost(start, end);
+		if (myMap.getMap().get(end) instanceof LavaTrap) {
+			cost += lava;
+		}
+		if (myMap.getMap().get(end) instanceof HealthTrap) {
+			cost +=health;
+		}
+		return cost;
+	}
+	
+	 	
 	
 }

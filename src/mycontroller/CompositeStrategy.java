@@ -33,6 +33,11 @@ public class CompositeStrategy implements IMoveStrategy{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public int distance(Coordinate start, Coordinate end) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 	
 }

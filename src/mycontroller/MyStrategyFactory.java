@@ -1,4 +1,5 @@
 package mycontroller;
+import mycontroller.IMoveStrategy;
 /* 
  * factory produces strategies for MyAIController
  * 
@@ -12,9 +13,9 @@ public class MyStrategyFactory {
 	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		
+		System.out.println(strategyName);
 		try {
-			Class<?> clazz = Class.forName(strategyName);
+			Class<?> clazz = Class.forName("mycontroller." + strategyName);
 			IMoveStrategy strategy = (IMoveStrategy) clazz.newInstance();
 			return strategy;
 		}

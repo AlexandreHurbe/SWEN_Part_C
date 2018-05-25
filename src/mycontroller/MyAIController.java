@@ -10,7 +10,8 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 2.5;
+	private final float SPEED_LIM = 5f;
+	private final float TURN_SPEED_LIM = 1f;
 	
 //	private HashMap<Coordinate, Float> path;
 	
@@ -63,7 +64,7 @@ public class MyAIController extends CarController{
 		
 		float goalAngle = path.get(currentCoord);
 
-		int diff =  (int)this.getAngle()- (int)goalAngle;
+		int diff =   (int)goalAngle - (int)this.getAngle();
 		System.out.println("diff:" + diff);
 		System.out.println("goalAngle: " + goalAngle);
 		System.out.println("carAngle: " + getAngle());
@@ -76,60 +77,90 @@ public class MyAIController extends CarController{
 		System.out.println("Goal: " + goalAngle);
 		System.out.println("Car: " + getAngle());
 		System.out.println("Diff: " + diff);
-		if(hitWall) {
-			System.out.println("Wall has been hit");
-		}
-		if(!nextTuple.getReachable()) {
-			// slow down and turn
-
-			applyReverseAcceleration();
-		}
-		else {
-			if(!nextTuple.getReachable() && checkAroundWall()) {
-				// slow down and turn
+//		if(!nextTuple.getReachable()) {
+//			// slow down and turn
+//
+//			applyReverseAcceleration();
+//		}
+//		else {
+//			if(!nextTuple.getReachable() && checkAroundWall()) {
+//				// slow down and turn
+//				applyReverseAcceleration();
+//				hitWall = true;
+//			} 
+//			else {
+//				hitWall = false;
+//				if(diff==0 ) {
+//					applyForwardAcceleration();
+//					
+//				}
+//		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
+//		    		accelerate();
+//		    		turnLeft(delta);
+//		    	}
+//		    	else {
+//		    		accelerate();
+//		    		turnRight(delta);
+//		    	}
+//			}
+//	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
+//	    		accelerate();
+//	    		turnLeft(delta);
+//	    	}
+//	    	else {
+//	    		accelerate();
+//	    		turnRight(delta);
+//	    	}
+//		}
+		
+		if(!hitWall) {
+			moveForward(diff, delta);
+			if(!path.containsKey(nextTuple.getCoordinate()) || getSpeed() == 0) {
 				applyReverseAcceleration();
+	
+			}
+			if(!path.containsKey(nextTuple.getCoordinate()) && getSpeed() == 0) {
+
 				hitWall = true;
-			} 
+			}
+		} 
+		else {
+			if(getSpeed() < 0.5) {
+				applyReverseAcceleration();
+			}
 			else {
 				hitWall = false;
-				if(diff==0 ) {
-					applyForwardAcceleration();
-					
-				}
-		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-		    		accelerate();
-		    		turnLeft(delta);
-		    	}
-		    	else {
-		    		accelerate();
-		    		turnRight(delta);
-		    	}
 			}
-	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-	    		accelerate();
-	    		turnLeft(delta);
-	    	}
-	    	else {
-	    		accelerate();
-	    		turnRight(delta);
-	    	}
 		}
+		
+
 	}
-	
+	 private void adjustPosition(){
+		// move towards where we suppose to go
+		 
+	 }
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
-	    	if(diff >= 0 && diff < 180 || diff>-360 && diff < -180) {
+	    	if(diff > 0) {
 	    		return RelativeDirection.LEFT;
 	    	}else {
 	    		return RelativeDirection.RIGHT;
 	    	}
 	    }
+	private void moveForward(float diff, float delta) {
+		if(diff == 0 || diff == 360) {
+			accelerate();
+		} else if(diff > 0 && diff <180 ||  diff >-360 && diff <= -180) {
+			accelerate();
+			turnLeft(delta);
+		} else {
+			accelerate();
+			turnRight(delta);
+		}
+
+	}
 	private void accelerate() {
 		if(getSpeed() < SPEED_LIM) {
 			applyForwardAcceleration();
-		}
-		else {
-			applyBrake();
-
 		}
 	}
 	

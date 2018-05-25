@@ -4,67 +4,74 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import tiles.HealthTrap;
+import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
 public class LowHealthExplore extends ExploreStrategy{
 	
 	MyMap myMap = MyMap.getInstance();
-	Coordinate coord;
 	
-	
+	@Override
+	public int distance(Coordinate start, Coordinate end) {
+		int lava = 5;
+		int health = -2;
+		int cost = estimateCost(start, end);
+		if (myMap.getMap().get(end) instanceof LavaTrap) {
+			cost += lava;
+		}
+		if (myMap.getMap().get(end) instanceof HealthTrap) {
+			cost +=health;
+		}
+		
+		return cost;
+	}
+
+	@SuppressWarnings("null")
 	@Override
 	public Coordinate getDestination() {
 //		System.out.println("start explore key");
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
 //		Coordinate currentPosition = myMap.getPosition();
 //		System.out.println(markMap.toString());
-		Coordinate coord;
+		Coordinate coord, minCoord = null, alterCoord = null;
+		int minDistance = Integer.MAX_VALUE;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 
 		while(mark.hasNext()) {
+			
 			coord = mark.next();
+			if(coord != null) {
 			//System.out.println("Found health");
-//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
-			if(markMap.get(coord) instanceof HealthTrap) {
-				System.out.println("found health at: " + coord.toString());
-				return coord;
-			}
-		}
-		
-		while(mark.hasNext()) {
-			coord = mark.next();
-//			System.out.println(coord);
-//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
-			if(markMap.get(coord) == null) {
-				System.out.println("found destination (even though health is low) at: " + coord.toString());
-				return coord;
-			}
-		}
-		return null;
-	}
+	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
+				if(markMap.get(coord) instanceof HealthTrap) {
+					int currentDistance = estimateCost(myMap.getPosition(), coord);
+					if (currentDistance < minDistance){
+						minDistance = currentDistance;
+						minCoord = coord;
+					}
+					System.out.println("found health at: " + coord.toString());
 	
+				}
+			} else {
+				alterCoord = coord;
+			}
+			
+
+		}
+		if(minCoord != null) {
+			return minCoord;
+		}
+		else {
+			return alterCoord;
+		}
+	}
+	@Override
 	public int estimateCost(Coordinate start, Coordinate destination) {
 		int estimateCost;
-		try {
-			HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
-				estimateCost = 1000;
-			}
-			else {
-				estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
-			}
-			return estimateCost;
-		}
-		catch (NullPointerException e){
-			HashMap<Coordinate, MapTile> markMap = myMap.getMap();
-			if (markMap.get(start).isType(MapTile.Type.TRAP) || !(markMap.get(start) instanceof HealthTrap)) {
-				estimateCost = 1000;
-			}
-			else {
-				estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
-			}
-			return estimateCost;
-		}
+
+		estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+		return estimateCost;
 		
 		
 	}

@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-
+import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
@@ -26,7 +26,7 @@ public class PathFinding {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		this.strategy =  new ExploreStrategy();
+//		this.strategy =  new ExploreStrategy();
 		//this.strategy = chooseStrategy(controller);
 		//this.strategy = new ExploreStrategy();
 		this.strategy = chooseStrategy(controller);
@@ -35,14 +35,23 @@ public class PathFinding {
 	}
 	
 	private IMoveStrategy chooseStrategy(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		if (controller.getHealth() < 40) {
+		
+		if (controller.getHealth() < 40 && isHealthTrap()) {
 			return factory.getMoveStrategy("LowHealthExplore");
 		}
 		else {
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
-	
+	private boolean isHealthTrap() {
+		Iterator<Coordinate> mark = myMap.getMarkMap().keySet().iterator();
+		while(mark.hasNext()) {
+			if(myMap.getMarkMap().get(mark.next()) instanceof HealthTrap) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	// use A* to find path to destination
 	public HashMap<Coordinate, Float> findPath() {
@@ -86,7 +95,7 @@ public class PathFinding {
 				if(!openSet.contains(neighbor)) {
 					openSet.add(neighbor);
 				}
-				int combinedGscore = gScore.get(current) + distance(current, neighbor);
+				int combinedGscore = gScore.get(current) + strategy.distance(current, neighbor);
 
 				if(combinedGscore >= gScore.get(neighbor)) {
 					continue;
@@ -162,8 +171,10 @@ public class PathFinding {
 				if(Math.abs(i)!=Math.abs(j)) {
 					Coordinate coord = new Coordinate(current.x+i, current.y+j);
 					MapTile tile = myMap.getMap().get(coord);
-					if(!tile.isType(MapTile.Type.WALL) && !coord.equals(current)) {
-						neighbors.add(coord);
+					if(tile!=null) {
+						if(!tile.isType(MapTile.Type.WALL) && !coord.equals(current)) {
+							neighbors.add(coord);
+						}
 					}
 				}
 			}
