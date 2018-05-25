@@ -22,7 +22,7 @@ public class ExploreStrategy implements IMoveStrategy {
 		Coordinate coord = null, minCoord = null;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 //		System.out.println(markMap.keySet());
-		int minDist = Integer.MIN_VALUE;
+		int minDist = Integer.MAX_VALUE;
 		if(!reachedDest()) {
 			minCoord = findDest();
 		}else {
@@ -35,7 +35,7 @@ public class ExploreStrategy implements IMoveStrategy {
 				if(markMap.get(coord) == null) {
 					this.coord = coord;
 					int distance = estimateCost(myMap.getPosition(), coord);
-					if(distance > minDist) {
+					if(distance < minDist) {
 						minCoord = coord;
 						minDist = distance;
 					}
