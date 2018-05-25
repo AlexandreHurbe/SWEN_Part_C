@@ -4,3 +4,7 @@ assets/log/output.log
 *.log
 *.log
 *.log
+assets/Driving.Properties
+*.Properties
+*.Properties
+*.Properties

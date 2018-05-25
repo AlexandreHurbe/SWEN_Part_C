@@ -20,7 +20,7 @@ public class MyStrategyFactory {
 			return strategy;
 		}
 		catch (ClassNotFoundException e) {
-			System.out.println("The given strategy was not given, returning explore strategy");
+			//System.out.println("The given strategy was not given, returning explore strategy");
 			IMoveStrategy strategy = new ExploreStrategy();
 			return strategy;
 		}
