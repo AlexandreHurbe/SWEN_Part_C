@@ -13,11 +13,15 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
+
 	private float SPEED_LIM = (float) 2.5;
 	private static final float MAX_DEGREES = 360;
 	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 2f;
 	private boolean SHOULD_SPEED = false;	
+
+	private final float TURN_SPEED_LIM = 1f;
+
 	
 //	private HashMap<Coordinate, Float> path;
 	
@@ -65,64 +69,7 @@ public class MyAIController extends CarController{
 	
 
 	
-	private void move2(float delta) {
-		System.out.println(getVelocity());
-		Coordinate currentCoord = new Coordinate(getPosition());
-		
-		float goalAngle = path.get(currentCoord);
-
-		int diff =  (int)goalAngle - (int)this.getAngle();
-		System.out.println("diff:" + diff);
-		System.out.println("goalAngle: " + goalAngle);
-		System.out.println("carAngle: " + getAngle());
-
-		
-
-		WorldSpatial.RelativeDirection dir = getDirection(diff);
-		PeekTuple nextTuple = peek(getVelocity(), goalAngle, dir, delta);
-
-		System.out.println("Goal: " + goalAngle);
-		System.out.println("Car: " + getAngle());
-		System.out.println("Diff: " + diff);
-		if(hitWall) {
-			System.out.println("Wall has been hit");
-		}
-
-		else {
-			if(!path.containsKey(nextTuple.getCoordinate()) || getSpeed()==0) {
-				// slow down and turn
-				applyReverseAcceleration();
-				hitWall = true;
-			} 
-			else {
-				hitWall = false;
-				if(diff==0 ) {
-					applyForwardAcceleration();
-					
-				}
-		    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-		    		accelerate();
-		    		turnLeft(delta);
-		    	}
-		    	else {
-		    		accelerate();
-		    		turnRight(delta);
-		    	}
-			}
-	    	if(diff > 0 && diff < 180 || diff>-360 && diff < -180) {
-	    		accelerate();
-	    		turnLeft(delta);
-	    	}
-	    	else {
-	    		accelerate();
-	    		turnRight(delta);
-	    	}
-		}
-	}
-	
-	
-	
-	private void move1(float delta) {
+	private void move(float delta) {
 		//testing turning left on the spot
 		System.out.println(path.toString());
 		Coordinate currentCoord = new Coordinate(getPosition());
@@ -210,22 +157,36 @@ public class MyAIController extends CarController{
 	}
 
 	
-	
+	 private void adjustPosition(){
+		// move towards where we suppose to go
+		 
+	 }
+
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
-	    	if(diff >= 0 && diff < 180 || diff>-360 && diff < -180) {
+	    	if(diff > 0) {
 	    		return RelativeDirection.LEFT;
-	    	}else {
+	    	}
+	    	else {
 	    		return RelativeDirection.RIGHT;
 	    	}
-	    }
-	 
+	 }
+
+	private void moveForward(float diff, float delta) {
+		if(diff == 0 || diff == 360) {
+			accelerate();
+		} else if(diff > 0 && diff <180 ||  diff >-360 && diff <= -180) {
+			accelerate();
+			turnLeft(delta);
+		} else {
+			accelerate();
+			turnRight(delta);
+		}
+
+	}
+
 	private void accelerate() {
 		if(getSpeed() < SPEED_LIM) {
 			applyForwardAcceleration();
-		}
-		else {
-			applyBrake();
-
 		}
 	}
 	
