@@ -28,7 +28,7 @@ public class ExploreStrategy implements IMoveStrategy {
 //			System.out.println(coord);
 //			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) == null) {
-				System.out.println("found destination" + coord.toString());
+				//System.out.println("found destination" + coord.toString());
 				this.coord = coord;
 				return coord;
 			}

@@ -26,9 +26,8 @@ public class PathFinding {
 //			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
-		this.strategy =  new ExploreStrategy();
 		//this.strategy = chooseStrategy(controller);
-		//this.strategy = new ExploreStrategy();
+		//this.strategy = new LowHealthExplore();
 		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		this.destination = this.strategy.getDestination();
@@ -177,7 +176,7 @@ public class PathFinding {
 		return distance;
 	}
 	
-	// construct the rout to destination using this data structure
+	// construct the route to destination using this data structure
 	private HashMap<Coordinate, Float> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
 		Stack<Coordinate> totalPath = new Stack<>();
 		totalPath.push(current);
@@ -189,7 +188,7 @@ public class PathFinding {
 			}
 		}
 
-		System.out.println(totalPath.toString());
+		//System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
 		HashMap<Coordinate, Float> myPath;
 		Path path = new Path();

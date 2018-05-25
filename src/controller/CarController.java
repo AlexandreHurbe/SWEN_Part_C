@@ -128,6 +128,7 @@ public abstract class CarController {
 		return car.peek(velocity, targetDegree, turnDirection, delta);
 	}
 	
+	
 	/**
 	 * Returns the view around your car (this is a VIEW_SQUARExVIEW_SQUARE area)
 	 */

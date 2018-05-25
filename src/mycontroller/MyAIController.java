@@ -1,6 +1,9 @@
 package mycontroller;
 
 import java.util.HashMap;
+
+import com.badlogic.gdx.math.Vector2;
+
 import controller.CarController;
 import tiles.MapTile;
 import utilities.Coordinate;
@@ -10,7 +13,11 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
-	private final float SPEED_LIM = (float) 2.5;
+	private float SPEED_LIM = (float) 2.5;
+	private static final float MAX_DEGREES = 360;
+	private static final float MAX_SPEED = 3f;
+	private static final float SLOW_SPEED = 2f;
+	private boolean SHOULD_SPEED = false;	
 	
 //	private HashMap<Coordinate, Float> path;
 	
@@ -58,12 +65,13 @@ public class MyAIController extends CarController{
 	
 
 	
-	private void move(float delta) {
+	private void move2(float delta) {
+		System.out.println(getVelocity());
 		Coordinate currentCoord = new Coordinate(getPosition());
 		
 		float goalAngle = path.get(currentCoord);
 
-		int diff =  (int)this.getAngle()- (int)goalAngle;
+		int diff =  (int)goalAngle - (int)this.getAngle();
 		System.out.println("diff:" + diff);
 		System.out.println("goalAngle: " + goalAngle);
 		System.out.println("carAngle: " + getAngle());
@@ -79,13 +87,9 @@ public class MyAIController extends CarController{
 		if(hitWall) {
 			System.out.println("Wall has been hit");
 		}
-		if(!nextTuple.getReachable()) {
-			// slow down and turn
 
-			applyReverseAcceleration();
-		}
 		else {
-			if(!nextTuple.getReachable() && checkAroundWall()) {
+			if(!path.containsKey(nextTuple.getCoordinate()) || getSpeed()==0) {
 				// slow down and turn
 				applyReverseAcceleration();
 				hitWall = true;
@@ -116,6 +120,97 @@ public class MyAIController extends CarController{
 		}
 	}
 	
+	
+	
+	private void move1(float delta) {
+		//testing turning left on the spot
+		System.out.println(path.toString());
+		Coordinate currentCoord = new Coordinate(getPosition());
+		float goalAngle = path.get(currentCoord);
+		float currentAngle = this.getAngle();
+		int deltaAngle = (int)goalAngle - (int)currentAngle;
+		SHOULD_SPEED = false;
+		System.out.println(deltaAngle);
+		if (deltaAngle == 0) {
+			Coordinate nextCoord = checkNextCoord(currentCoord, delta);
+			//Coordinate previousCoord = currentCoord;
+			for (int i = 0; i < 3; i ++) {
+				if (path.containsKey(nextCoord)) {
+					float nextAngle = path.get(nextCoord);
+					//System.out.println(nextAngle-currentAngle);
+					currentAngle = nextAngle;
+					currentCoord = nextCoord;
+					nextCoord = checkNextCoord(nextCoord, delta);
+				}
+				else {
+					for (int x = -1; x < 2; x++) {
+						for (int y = -1; y < 2; y++) {
+							if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
+								nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
+								if (path.containsKey(nextCoord)) {
+									this.SPEED_LIM = SLOW_SPEED;
+									accelerate();
+								}
+								
+							}
+						}
+					}
+				}
+			}
+			
+			SHOULD_SPEED = true;
+			if (SHOULD_SPEED = true){
+				//System.out.println("The car should go faster");
+				this.SPEED_LIM = MAX_SPEED;
+				accelerate();
+			}
+		}
+		else {
+			this.SPEED_LIM = SLOW_SPEED;
+			if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
+				accelerate();
+				turnLeft(delta);
+	    	}
+	    	else {
+	    		accelerate();
+	    		turnRight(delta);
+	    	}
+		}
+		if(getSpeed() == 0) {
+			applyReverseAcceleration();
+		}
+	}
+	
+	private Coordinate checkNextCoord(Coordinate currentCoord, float delta) {
+		Vector2 netAcceleration = calculateAcceleration(2f, 0.5f);
+		float nextVelocityX = getVelocity().x + netAcceleration.x * delta;
+		float nextVelocityY = getVelocity().y + netAcceleration.y * delta;
+		int nextX = (int) ((int)currentCoord.x +  nextVelocityX * delta);
+		int nextY = (int) ((int)currentCoord.x +  nextVelocityY * delta);
+		Coordinate nextCoord = new Coordinate(nextX, nextY);
+		return nextCoord;
+	}
+	
+	private Vector2 calculateAcceleration(float drivingForce, float frictionForce){
+
+		Vector2 acceleration = new Vector2(1,0);
+		acceleration.rotate(0);
+		acceleration.scl(drivingForce);
+
+		Vector2 friction = new Vector2(1,0);
+		if(acceleration.len() > 0){
+			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
+		} else {
+			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
+		}
+		friction.scl(frictionForce);
+
+		Vector2 netAcceleration = acceleration.add(friction);
+		return netAcceleration;
+	}
+
+	
+	
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
 	    	if(diff >= 0 && diff < 180 || diff>-360 && diff < -180) {
 	    		return RelativeDirection.LEFT;
@@ -123,6 +218,7 @@ public class MyAIController extends CarController{
 	    		return RelativeDirection.RIGHT;
 	    	}
 	    }
+	 
 	private void accelerate() {
 		if(getSpeed() < SPEED_LIM) {
 			applyForwardAcceleration();
