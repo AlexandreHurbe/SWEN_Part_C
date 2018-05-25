@@ -19,7 +19,7 @@ public class ExploreStrategy implements IMoveStrategy {
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
 //		Coordinate currentPosition = myMap.getPosition();
 //		System.out.println(markMap.toString());
-		Coordinate coord = null;
+		Coordinate coord = null, minCoord = null;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 //		System.out.println(markMap.keySet());
 		int minDist = Integer.MAX_VALUE;
@@ -31,17 +31,17 @@ public class ExploreStrategy implements IMoveStrategy {
 //			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) == null) {
 				this.coord = coord;
-				int distance = Math.abs(coord.x - myMap.getPosition().x) + Math.abs(coord.y - myMap.getPosition().y);
+				int distance = estimateCost(myMap.getPosition(), coord);
 				if(distance < minDist) {
-					this.coord = coord;
+					minCoord = coord;
 					minDist = distance;
 				}
 
 			}
 		}
-		System.out.println("found destination" + this.coord.toString());
+		System.out.println("found destination" + minCoord.toString());
 		
-		return this.coord;
+		return minCoord;
 
 
 	}
@@ -59,7 +59,7 @@ public class ExploreStrategy implements IMoveStrategy {
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
-		int lava = 2;
+		int lava = 5;
 		int health = -1;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {

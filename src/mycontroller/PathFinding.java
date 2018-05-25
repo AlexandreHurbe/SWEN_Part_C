@@ -87,23 +87,29 @@ public class PathFinding {
 			closedSet.add(current);
 			
 			List<Coordinate> neighbors = findNeighbor(current);
-			for(Coordinate neighbor: neighbors) {
-				if(closedSet.contains(neighbor)) {
-					continue;
-				}
-				// discover a new node
-				if(!openSet.contains(neighbor)) {
-					openSet.add(neighbor);
-				}
-				int combinedGscore = gScore.get(current) + strategy.distance(current, neighbor);
+			if (neighbors != null) {
+				for(Coordinate neighbor: neighbors) {
+					if(closedSet.contains(neighbor)) {
+						continue;
+					}
+					// discover a new node
+					if(!openSet.contains(neighbor)) {
+						openSet.add(neighbor);
+					}
+					int combinedGscore = gScore.get(current) + strategy.distance(current, neighbor);
 
-				if(combinedGscore >= gScore.get(neighbor)) {
-					continue;
+					if(combinedGscore >= gScore.get(neighbor)) {
+						continue;
+					}
+					cameFrom.put(neighbor, current);
+					gScore.put(neighbor, combinedGscore);
+					fScore.put(neighbor, gScore.get(neighbor) + strategy.estimateCost(neighbor, destination));
 				}
-				cameFrom.put(neighbor, current);
-				gScore.put(neighbor, combinedGscore);
-				fScore.put(neighbor, gScore.get(neighbor) + strategy.estimateCost(neighbor, destination));
 			}
+			else {
+				System.out.println("System cought");
+			}
+			
 		}
 		return null;
 	} 	
@@ -171,15 +177,17 @@ public class PathFinding {
 				if(Math.abs(i)!=Math.abs(j)) {
 					Coordinate coord = new Coordinate(current.x+i, current.y+j);
 					MapTile tile = myMap.getMap().get(coord);
-					if(tile!=null) {
-						if(!tile.isType(MapTile.Type.WALL) && !coord.equals(current)) {
+					try {
+						if(!tile.isType(MapTile.Type.WALL)) {
 							neighbors.add(coord);
 						}
 					}
+					catch (NullPointerException e) {
+						return null;
+					}
+					}
 				}
 			}
-				
-		}
 		return neighbors;
 	}
 	// actual distance between 2 coordinates
