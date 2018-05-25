@@ -40,7 +40,7 @@ public class ExploreStrategy implements IMoveStrategy {
 
 			}
 		}
-		System.out.println("found destination" + this.coord.toString());
+		//System.out.println("found destination" + this.coord.toString());
 		
 		return this.coord;
 

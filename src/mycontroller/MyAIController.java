@@ -70,15 +70,14 @@ public class MyAIController extends CarController{
 
 	
 	private void move(float delta) {
-		//testing turning left on the spot
-		System.out.println(path.toString());
+		//System.out.println(path.toString());
 		Coordinate currentCoord = new Coordinate(getPosition());
 		float goalAngle = path.get(currentCoord);
 		float currentAngle = this.getAngle();
 		int deltaAngle = (int)goalAngle - (int)currentAngle;
 		SHOULD_SPEED = false;
 		System.out.println(deltaAngle);
-		if (deltaAngle == 0) {
+		if (4 > deltaAngle && deltaAngle >= 0 || -359 == deltaAngle) {
 			Coordinate nextCoord = checkNextCoord(currentCoord, delta);
 			//Coordinate previousCoord = currentCoord;
 			for (int i = 0; i < 3; i ++) {
