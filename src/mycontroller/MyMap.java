@@ -82,8 +82,7 @@ public class MyMap {
 		
 		Coordinate end = findNeighbor(this.position, destination, traveled);
 		
-		while(findNeighbor(end, destination, traveled) != null) {
-			end = findNeighbor(end, destination, traveled);
+		while((end = findNeighbor(end, destination, traveled)) != null) {
 			if(end.equals(destination)) {
 				return true;
 			}

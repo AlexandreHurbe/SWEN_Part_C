@@ -16,8 +16,8 @@ public class MyAIController extends CarController{
 
 	private float SPEED_LIM = 3f;
 	private static final float MAX_DEGREES = 360;
-	private static final float MAX_SPEED = 3f;
-	private static final float SLOW_SPEED = 2f;
+	private static final float MAX_SPEED = 5f;
+	private static final float SLOW_SPEED = 0.2f;
 	private boolean SHOULD_SPEED = false;
 	
 
@@ -81,7 +81,7 @@ public class MyAIController extends CarController{
 			int deltaAngle = (int)goalAngle - (int)currentAngle;
 			SHOULD_SPEED = false;
 			//System.out.println(deltaAngle);
-			if (4 > deltaAngle && deltaAngle >= 0 || -359 >= deltaAngle && deltaAngle < -355) {
+			if (deltaAngle == 0/* > deltaAngle && deltaAngle >= 0 || -359 >= deltaAngle && deltaAngle < -355*/) {
 				Coordinate nextCoord = checkNextCoord(currentCoord, delta);
 				//Coordinate previousCoord = currentCoord;
 				for (int i = 0; i < 3; i ++) {
@@ -189,7 +189,6 @@ public class MyAIController extends CarController{
 			accelerate();
 			turnRight(delta);
 		}
-
 	}
 
 	private void accelerate() {
