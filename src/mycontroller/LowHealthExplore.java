@@ -66,6 +66,7 @@ public class LowHealthExplore extends ExploreStrategy{
 			return alterCoord;
 		}
 	}
+	
 	@Override
 	public int estimateCost(Coordinate start, Coordinate destination) {
 		int estimateCost;

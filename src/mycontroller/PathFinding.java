@@ -121,7 +121,7 @@ public class PathFinding {
 				}
 			}
 			else {
-				System.out.println("System cought");
+				//System.out.println("Pathfinding method, neighbors is null");
 			}
 			
 		}

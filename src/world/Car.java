@@ -544,9 +544,9 @@ public class Car extends Sprite{
 		MapTile tile = World.lookUp(getX(), getY());
 		MapTile.Type tileType = tile.getType();
 		String trapType = (tileType == MapTile.Type.TRAP ? "("+((TrapTile) tile).getTrap()+")":"");
-		/*logger.info("Speed: %5.1f; Angle: %5.1f; Position: %5s; Key: %2d; Health: %5.1f; Tile: %s%s",
+		logger.info("Speed: %5.1f; Angle: %5.1f; Position: %5s; Key: %2d; Health: %5.1f; Tile: %s%s",
 				getSpeed(), getAngle(), getPosition(), getKey(), getHealth(), tileType, trapType);
-				*/
+				
 	}
 
 	public HashMap<Coordinate,MapTile> getView(){
