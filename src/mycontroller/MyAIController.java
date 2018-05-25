@@ -13,11 +13,20 @@ import world.WorldSpatial;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
+<<<<<<< HEAD
 	private float SPEED_LIM = 3f;
+=======
+
+	private float SPEED_LIM = (float) 2.5;
+>>>>>>> 4ef67a280298b02766bddd2d42219da7bcb85532
 	private static final float MAX_DEGREES = 360;
 	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 2f;
 	private boolean SHOULD_SPEED = false;	
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4ef67a280298b02766bddd2d42219da7bcb85532
 	private final float TURN_SPEED_LIM = 1f;
 
 	
@@ -141,6 +150,7 @@ public class MyAIController extends CarController{
 		Vector2 acceleration = new Vector2(1,0);
 		acceleration.rotate(0);
 		acceleration.scl(drivingForce);
+<<<<<<< HEAD
 
 		Vector2 friction = new Vector2(1,0);
 		if(acceleration.len() > 0){
@@ -150,6 +160,17 @@ public class MyAIController extends CarController{
 		}
 		friction.scl(frictionForce);
 
+=======
+
+		Vector2 friction = new Vector2(1,0);
+		if(acceleration.len() > 0){
+			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
+		} else {
+			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
+		}
+		friction.scl(frictionForce);
+
+>>>>>>> 4ef67a280298b02766bddd2d42219da7bcb85532
 		Vector2 netAcceleration = acceleration.add(friction);
 		return netAcceleration;
 	}
