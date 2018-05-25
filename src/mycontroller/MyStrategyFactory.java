@@ -13,7 +13,7 @@ public class MyStrategyFactory {
 	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		System.out.println(strategyName);
+		//System.out.println(strategyName);
 		try {
 			Class<?> clazz = Class.forName("mycontroller." + strategyName);
 			IMoveStrategy strategy = (IMoveStrategy) clazz.newInstance();

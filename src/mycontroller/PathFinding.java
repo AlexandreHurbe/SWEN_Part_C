@@ -16,7 +16,7 @@ public class PathFinding {
 	IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	private Coordinate destination;
-	
+	private boolean needHealing = false;
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 		// TODO Auto-generated constructor stub
@@ -32,13 +32,26 @@ public class PathFinding {
 		//this.strategy = new LowHealthExplore();
 		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
+		if(this.strategy instanceof CollectKeyStrategy) {
+			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.keysRemaining);
+		}
 		this.destination = this.strategy.getDestination();
+		
 	}
 	
 	private IMoveStrategy chooseStrategy(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+		if (controller.getHealth() == 100) {
+			needHealing = false;
+		}
+		if (controller.getHealth() < 40) {
+			needHealing = true;
+		}
 		
-		if (controller.getHealth() < 40 && isHealthTrap()) {
+		if (needHealing) {
 			return factory.getMoveStrategy("LowHealthExplore");
+		}
+		else if (myMap.returnKeyStorage() != null && controller.keysToCollect - myMap.returnKeyStorage().size() == 1) {
+			return factory.getMoveStrategy("CollectKeyStrategy");
 		}
 		else {
 			return factory.getMoveStrategy("ExploreStrategy");
@@ -217,6 +230,7 @@ public class PathFinding {
 		myPath = path.getPath();
 		return myPath;
 	}
+	
 	
 	
 }
