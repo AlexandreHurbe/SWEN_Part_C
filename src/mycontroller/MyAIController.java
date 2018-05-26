@@ -42,6 +42,7 @@ public class MyAIController extends CarController{
 	
 	@Override
 	public void update(float delta) {
+		System.out.println("Keys: " + myMap.returnKeyStorage().toString());
 		keysRemaining = getKey();
 		//System.out.println("++++++++++++++++++++++++Key remain: " + keysRemaining);
 		// TODO Auto-generated method stub
@@ -69,7 +70,7 @@ public class MyAIController extends CarController{
 			e.printStackTrace();
 		}
 		path = pathFinding.findPath();
-		System.out.println(path.toString());
+		System.out.println("Path: " + path.toString());
 		
 //		alexMove(delta);
 		if(nearHealthTrap()) {
@@ -151,14 +152,18 @@ public class MyAIController extends CarController{
 	}
 	
 	private void bowenMove(float delta) {
+		Coordinate currentCoord = new Coordinate(getPosition());
 		// following the right path
 		if(path.size()== 0 || onPath() )  {
 			
 			SPEED_LIM = MAX_SPEED;
 			accelerate();
 		} else {
+			
 			System.out.println("Not On path");
+			System.out.println("Not On path, path: " + path.toString());
 			SPEED_LIM = SLOW_SPEED;
+			
 			if(getSpeed() > SLOW_SPEED) {
 				applyBrake();
 				turn(delta);
@@ -170,6 +175,8 @@ public class MyAIController extends CarController{
 				accelerate();
 				turn(delta);
 			}
+			
+			
 		}
 	}
 
@@ -280,15 +287,16 @@ public class MyAIController extends CarController{
 
 		 if(diffAngle > 0.01f) {
 			 if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
-				 System.out.println("LEFT");
+				 System.out.println("LEFT in turn");
 				 turnLeft(delta);
 				 return;
 			 } else {
-				 System.out.println("RIGHT");
+				 System.out.println("RIGHT in turn");
 				 turnRight(delta);
 				 return;
 			 }
 		 } else {
+			 
 			 adjustPosition(delta);
 		 }
 	}
@@ -317,6 +325,7 @@ public class MyAIController extends CarController{
 	
 	
 		// move towards where we suppose to go
+	 	 System.out.println("adjustPostion");
 		 float xPos = getX();
 		 float yPos = getY();
 		 Coordinate coord =  new Coordinate(getPosition());

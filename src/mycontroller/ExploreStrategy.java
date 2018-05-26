@@ -48,7 +48,7 @@ public class ExploreStrategy implements IMoveStrategy {
 
 		//System.out.println("found destination" + minCoord.toString());
 
-		System.out.println("found destination" + minCoord.toString());
+		System.out.println("Found destination in exploreStrategy: " + minCoord.toString());
 		return minCoord;
 		
 

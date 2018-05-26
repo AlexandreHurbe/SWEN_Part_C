@@ -14,8 +14,8 @@ public class LowHealthExplore extends ExploreStrategy{
 	
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
-		int lava = 5;
-		int health = -2;
+		int lava = 50;
+		int health = -20;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;
@@ -34,7 +34,8 @@ public class LowHealthExplore extends ExploreStrategy{
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
 //		Coordinate currentPosition = myMap.getPosition();
 //		System.out.println(markMap.toString());
-		Coordinate coord, minCoord = null, alterCoord = null;
+		Coordinate coord, minCoord, alterCoord;
+		coord = minCoord = alterCoord = null;
 		int minDistance = Integer.MAX_VALUE;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 
@@ -49,7 +50,7 @@ public class LowHealthExplore extends ExploreStrategy{
 					minDistance = currentDistance;
 					minCoord = coord;
 				}
-				System.out.println("found health at: " + coord.toString());
+				System.out.println("Found health at: " + coord.toString());
 			}
 			if(markMap.get(coord) == null) {
 				alterCoord = coord;
@@ -57,16 +58,18 @@ public class LowHealthExplore extends ExploreStrategy{
 		}
 		
 		if(minCoord != null) {
+			System.out.println("Found dest minCoord in LowHealth: " + minCoord.toString());
 			return minCoord;
 		}
 		else {
+			System.out.println("Found dest alterCoord in LowHealth: " + alterCoord.toString());
 			return alterCoord;
 		}
 	}
 	@Override
-	public int estimateCost(Coordinate start, Coordinate destination) {
+	public int estimateCost(Coordinate start, Coordinate end) {
 		int estimateCost;
-		estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
+		estimateCost = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		return estimateCost;
 		
 		

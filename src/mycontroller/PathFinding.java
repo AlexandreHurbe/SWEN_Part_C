@@ -34,8 +34,11 @@ public class PathFinding {
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		if(this.strategy instanceof CollectKeyStrategy) {
 			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.keysRemaining);
+		}else {
+			this.destination = this.strategy.getDestination();
 		}
-		this.destination = this.strategy.getDestination();
+		
+		System.out.println("Dest in Pathfinding: " + this.destination.toString());
 		
 	}
 	
@@ -43,17 +46,20 @@ public class PathFinding {
 		if (controller.getHealth() == 100) {
 			controller.needHealing = false;
 		}
-		if (controller.getHealth() < 40) {
+		if (controller.getHealth() < 60) {
 			controller.needHealing = true;
 		}
 		
 		if (controller.needHealing) {
+			System.out.println("***************************LowHealthStrategy***************************");
 			return factory.getMoveStrategy("LowHealthExplore");
 		}
 		else if (myMap.returnKeyStorage() != null && controller.keysToCollect - myMap.returnKeyStorage().size() == 1) {
+			System.out.println("***************************CollectKeyStrategy***************************");
 			return factory.getMoveStrategy("CollectKeyStrategy");
 		}
 		else {
+			System.out.println("***************************ExploreStrategy***************************");
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
