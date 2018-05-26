@@ -41,24 +41,21 @@ public class LowHealthExplore extends ExploreStrategy{
 		while(mark.hasNext()) {
 			
 			coord = mark.next();
-			if(coord != null) {
 			//System.out.println("Found health");
 	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
-				if(markMap.get(coord) instanceof HealthTrap) {
-					int currentDistance = estimateCost(myMap.getPosition(), coord);
-					if (currentDistance < minDistance){
-						minDistance = currentDistance;
-						minCoord = coord;
-					}
-					System.out.println("found health at: " + coord.toString());
-	
+			if(markMap.get(coord) instanceof HealthTrap) {
+				int currentDistance = estimateCost(myMap.getPosition(), coord);
+				if (currentDistance < minDistance){
+					minDistance = currentDistance;
+					minCoord = coord;
 				}
-			} else {
+				System.out.println("found health at: " + coord.toString());
+			}
+			if(markMap.get(coord) == null) {
 				alterCoord = coord;
 			}
-			
-
 		}
+		
 		if(minCoord != null) {
 			return minCoord;
 		}
@@ -69,7 +66,6 @@ public class LowHealthExplore extends ExploreStrategy{
 	@Override
 	public int estimateCost(Coordinate start, Coordinate destination) {
 		int estimateCost;
-
 		estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
 		return estimateCost;
 		

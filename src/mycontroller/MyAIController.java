@@ -5,19 +5,22 @@ import java.util.HashMap;
 import com.badlogic.gdx.math.Vector2;
 
 import controller.CarController;
+import tiles.HealthTrap;
+import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 import utilities.PeekTuple;
 import world.Car;
 import world.WorldSpatial;
+import world.WorldSpatial.Direction;
 import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
 
 	private float SPEED_LIM = 3f;
 	private static final float MAX_DEGREES = 360;
-	private static final float MAX_SPEED = 5f;
-	private static final float SLOW_SPEED = 0.2f;
+	private static final float MAX_SPEED = 4f;
+	private static final float SLOW_SPEED = 3f;
 	private boolean SHOULD_SPEED = false;
 	
 
@@ -29,6 +32,7 @@ public class MyAIController extends CarController{
 	private MyMap myMap = MyMap.getInstance();
 	private PathFinding pathFinding;
 	private HashMap<Coordinate, Float> path;
+	public boolean needHealing = false;
 	private boolean hitWall = false;
 
 	public MyAIController(Car car) {
@@ -65,74 +69,177 @@ public class MyAIController extends CarController{
 			e.printStackTrace();
 		}
 		path = pathFinding.findPath();
+		System.out.println(path.toString());
 		
-		
-		alexMove(delta);
+//		alexMove(delta);
+		if(nearHealthTrap()) {
+			applyBrake();
+		} else {
+			bowenMove(delta);
+		}
 	}
 	
-
+	private boolean nearHealthTrap() {
+		Coordinate currentCoord = new Coordinate(getPosition());
+		
+		if(path.size()==0) {
+			if(this.myMap.getMap().get(currentCoord) instanceof HealthTrap) {
+				return true;	
+			}
+		}
+		return false;
+	}
+	private boolean onPath() {
+		Coordinate currentCoord = new Coordinate(getPosition());
+		
+		float xPos = getX();
+		float yPos = getY();
+		float angleDiff = 0.01f;
+		float posDiff = 0.001f;
+		System.out.println("Xpos is:" + xPos);
+		System.out.println("Ypos is:" + yPos);
+		System.out.println("coord is:" + currentCoord);
+		if(horizontal()) {
+			//check Y position
+			if(almostSame(yPos, currentCoord.y, angleDiff) && almostSame(getAngle(), this.path.get(currentCoord)
+					,posDiff)) {
+				return true;
+			}
+		}
+		if(vertical()) {
+			//check X position
+			if(almostSame(xPos, currentCoord.x, angleDiff) && almostSame(getAngle(), this.path.get(currentCoord)
+					,posDiff)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private boolean almostSame(float actual, float current, float diff) {
+		float max = current + diff;
+		float min = current - diff;
+		
+		if(actual > min && actual < max) {
+			return true;
+		}
+//		if(actual == current) {
+//			return true;
+//		}
+		return false;
+	}
+	private boolean horizontal() {
+		Coordinate currentCoord = new Coordinate(getPosition());
+		float goalAngle;
+		if(path.containsKey(currentCoord)) {
+			goalAngle = path.get(currentCoord);
+			if(goalAngle == 0f || goalAngle ==180f) {
+				return true;
+			}
+		}
+		return false;
+	}
+	private boolean vertical() {
+		Coordinate currentCoord = new Coordinate(getPosition());
+		float goalAngle;
+		if(path.containsKey(currentCoord)) {
+			goalAngle = path.get(currentCoord);
+			if(goalAngle == 90f || goalAngle ==270f) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
+	private void bowenMove(float delta) {
+		// following the right path
+		if(path.size()== 0 || onPath() )  {
+			
+			SPEED_LIM = MAX_SPEED;
+			accelerate();
+		} else {
+			System.out.println("Not On path");
+			SPEED_LIM = SLOW_SPEED;
+			if(getSpeed() > SLOW_SPEED) {
+				applyBrake();
+				turn(delta);
+				
+			} else if(getSpeed() == 0){
+				applyReverseAcceleration();
+				turn(delta);
+			} else {
+				accelerate();
+				turn(delta);
+			}
+		}
+	}
+
 	private void alexMove(float delta) {
 		//System.out.println(path.toString());
 		Coordinate currentCoord = new Coordinate(getPosition());
-		if (path.containsKey(currentCoord)) {
-			float goalAngle = path.get(currentCoord);
-			float currentAngle = this.getAngle();
-			int deltaAngle = (int)goalAngle - (int)currentAngle;
-			SHOULD_SPEED = false;
+		
+
+//			float deltaAngle = goalAngle - currentAngle;
+			
 			//System.out.println(deltaAngle);
-			if (deltaAngle == 0/* > deltaAngle && deltaAngle >= 0 || -359 >= deltaAngle && deltaAngle < -355*/) {
-				Coordinate nextCoord = checkNextCoord(currentCoord, delta);
+//			if ( deltaAngle == 0 || deltaAngle == 360) {
+//				Coordinate nextCoord = checkNextCoord(currentCoord, delta);
 				//Coordinate previousCoord = currentCoord;
-				for (int i = 0; i < 3; i ++) {
-					if (path.containsKey(nextCoord)) {
-						float nextAngle = path.get(nextCoord);
-						//System.out.println(nextAngle-currentAngle);
-						currentAngle = nextAngle;
-						currentCoord = nextCoord;
-						nextCoord = checkNextCoord(nextCoord, delta);
-					}
-					else {
-						for (int x = -1; x < 2; x++) {
-							for (int y = -1; y < 2; y++) {
-								if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
-									nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
-									if (path.containsKey(nextCoord)) {
-										this.SPEED_LIM = SLOW_SPEED;
-										accelerate();
-									}
-									
-								}
-							}
-						}
-					}
-				}
+//				for (int i = 0; i < 3; i ++) {
+//					if (path.containsKey(nextCoord)) {
+//						float nextAngle = path.get(nextCoord);
+//						//System.out.println(nextAngle-currentAngle);
+//						currentAngle = nextAngle;
+//						currentCoord = nextCoord;
+//						nextCoord = checkNextCoord(nextCoord, delta);
+//					}
+//					else {
+//						for (int x = -1; x < 2; x++) {
+//							for (int y = -1; y < 2; y++) {
+//								if (Math.abs(x)!=Math.abs(y) && x != 0 && y != 0) {
+//									nextCoord = new Coordinate(currentCoord.x + x, currentCoord.y + y);
+//									if (path.containsKey(nextCoord)) {
+//										this.SPEED_LIM = SLOW_SPEED;
+//										adjustPosition(delta);
+//										accelerate();
+//									}
+//									
+//								}
+//							}
+//						}
+//					}
+//				}
 				
-				SHOULD_SPEED = true;
-				if (SHOULD_SPEED = true){
-					//System.out.println("The car should go faster");
-					this.SPEED_LIM = MAX_SPEED;
-					accelerate();
-				}
-			}
-			else {
-				this.SPEED_LIM = SLOW_SPEED;
-				if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
-					accelerate();
-					turnLeft(delta);
-		    	}
-		    	else {
-		    		accelerate();
-		    		turnRight(delta);
-		    	}
-			}
-			if(getSpeed() == 0) {
-				applyReverseAcceleration();
-			}
-		}
-		else {
-			accelerate();
-		}
+
+				//System.out.println("The car should go faster");
+//				this.SPEED_LIM = MAX_SPEED;
+//				accelerate();
+
+				
+//			}
+//			else {
+//				this.SPEED_LIM = SLOW_SPEED;
+//				if(deltaAngle > 0 && deltaAngle <= 180 || deltaAngle >-360 && deltaAngle <= -180) {
+//					accelerate();
+//					turnLeft(delta);
+//					
+//		    	}
+//		    	else {
+//		    		accelerate();
+//		    		turnRight(delta);
+//		    		
+//		    	}
+//			}
+//			if(getSpeed() == 0) {
+//				applyReverseAcceleration();
+//				
+//			}
+		
+//		else {
+//			adjustPosition(delta);
+//			accelerate();
+//			
+//		}
+	
 		
 	}
 	
@@ -164,11 +271,117 @@ public class MyAIController extends CarController{
 		return netAcceleration;
 	}
 
+	private void turn(float delta) {
+		 Coordinate currentCoord = new Coordinate(getPosition());
+		 float goalAngle = path.get(currentCoord);
+		 float currentAngle = this.getAngle();
+		 float deltaAngle = goalAngle - currentAngle;
+		 float diffAngle  = Math.abs(deltaAngle);
+
+		 if(diffAngle > 0.01f) {
+			 if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
+				 System.out.println("LEFT");
+				 turnLeft(delta);
+				 return;
+			 } else {
+				 System.out.println("RIGHT");
+				 turnRight(delta);
+				 return;
+			 }
+		 } else {
+			 adjustPosition(delta);
+		 }
+	}
+ private void adjustPosition(float delta){
+//		 Coordinate currentCoord = new Coordinate(getPosition());
+//		 float goalAngle = path.get(currentCoord);
+//		 float currentAngle = this.getAngle();
+//		 float deltaAngle = Math.abs(goalAngle - currentAngle);
+//		 float xPos = getX();
+//		 float yPos = getY();
+//		 Coordinate coord =  new Coordinate(getPosition());
+//		 if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180
+//				 || goalAngle == 90 && xPos > coord.x || goalAngle == 270 && xPos < coord.x
+//				 || goalAngle == 0  && yPos > coord.y || goalAngle == 180 && yPos < coord.y) {
+//				System.out.println("LEFT");
+//				turnLeft(delta);
+//				
+//	    	}
+//		 if(deltaAngle > -180 && deltaAngle < 0 || deltaAngle > 180 && deltaAngle < 360
+//				 || goalAngle == 90 && xPos < coord.x || goalAngle == 270 && xPos > coord.x
+//				 || goalAngle == 0  && yPos < coord.y || goalAngle == 180 && yPos > coord.y) {
+//				System.out.println("RIGHT");
+//	    		turnRight(delta);
+//	    		
+//	    	}
 	
-	 private void adjustPosition(){
+	
 		// move towards where we suppose to go
+		 float xPos = getX();
+		 float yPos = getY();
+		 Coordinate coord =  new Coordinate(getPosition());
+		 System.out.println("Coord is:" + coord.toString());
+		 float angle = path.get(coord);
+		 System.out.println("Angle is:" + angle);
+		 System.out.println("Xpos is:" + xPos);
+		 System.out.println("Ypos is:" + yPos);
+		 //up
+		 if(angle == 90f) {
+			 if(xPos > (float)coord.x) {
+				 System.out.println("LEFT");
+				 turnLeft(delta);
+				 return;
+			 }
+			 if (xPos < (float)coord.x) {
+				 System.out.println("RIGHT");
+				 turnRight(delta);
+				 return;
+			 }
+		 }
+		//down
+		if(angle == 270f) {
+			 if(xPos < (float)coord.x) {
+				 System.out.println("LEFT");
+				 turnLeft(delta);
+				 return;
+			 }
+			 if (xPos > (float)coord.x) {
+				 System.out.println("RIGHT");
+				 turnRight(delta);
+				 return;
+			 }
+		}
+		//right
+		if(angle == 0f) {
+			 if(yPos > (float)coord.y) {
+				 System.out.println("RIGHT");
+				 turnRight(delta);
+				 return;
+			 }
+			 if (yPos < (float)coord.y) {
+				 System.out.println("LEFT");
+				 turnLeft(delta);
+				 return;
+			 }
+			 
+		 }
+		//left
+		if(angle == 180f) {
+			 if(yPos < (float)coord.y) {
+				 System.out.println("RIGHT");
+				 turnRight(delta);
+				 return;
+			 }
+			 if (yPos > (float)coord.y) {
+				 System.out.println("LEFT");
+				 turnLeft(delta);
+				 return;
+			 }
+			 
+		}
 		 
 	 }
+	 
 
 	 private WorldSpatial.RelativeDirection getDirection(float diff) {
 	    	if(diff > 0) {

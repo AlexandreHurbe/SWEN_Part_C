@@ -24,7 +24,7 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
-		int estimateCost = Math.abs(dest.x - start.x) + Math.abs(dest.y - start.y);
+		int estimateCost = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
 		return estimateCost;
 	}
@@ -59,8 +59,8 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		
-		int lava = 5;
-		int health = -1;
+		int lava = 10;
+		int health = 0;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;

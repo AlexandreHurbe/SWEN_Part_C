@@ -100,8 +100,8 @@ public class ExploreStrategy implements IMoveStrategy {
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
-		int lava = 5;
-		int health = -5;
+		int lava = 30;
+		int health = 0;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;
