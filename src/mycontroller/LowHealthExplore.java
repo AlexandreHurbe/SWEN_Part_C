@@ -16,7 +16,7 @@ public class LowHealthExplore extends ExploreStrategy{
 	public int estimateCost(Coordinate start, Coordinate end) {
 		int lava = 10;
 		int health = -5;
-		int cost = estimateCost(start, end);
+		int cost = distance(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;
 		}
@@ -44,7 +44,7 @@ public class LowHealthExplore extends ExploreStrategy{
 			//System.out.println("Found health");
 	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 			if(markMap.get(coord) instanceof HealthTrap) {
-				int currentDistance = estimateCost(myMap.getPosition(), coord);
+				int currentDistance = distance(myMap.getPosition(), coord);
 				if (currentDistance < minDistance){
 					minDistance = currentDistance;
 					minCoord = coord;

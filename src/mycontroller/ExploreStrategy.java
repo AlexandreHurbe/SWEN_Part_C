@@ -29,7 +29,7 @@ public class ExploreStrategy implements IMoveStrategy {
 				coord = mark.next();
 	
 				if(markMap.get(coord) == null) {
-					int distance = estimateCost(myMap.getPosition(), coord);
+					int distance = distance(myMap.getPosition(), coord);
 					if(distance < minDist) {
 						minCoord = coord;
 						minDist = distance;
