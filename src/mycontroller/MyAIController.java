@@ -44,8 +44,10 @@ public class MyAIController extends CarController{
 	
 	@Override
 	public void update(float delta) {
+		System.out.println("###########################################UPDATE###########################################");
 		System.out.println("Keys: " + myMap.returnKeyStorage().toString());
 		keysRemaining = getKey();
+		System.out.println("keyRemaining: " + this.keysRemaining);
 		//System.out.println("++++++++++++++++++++++++Key remain: " + keysRemaining);
 		// TODO Auto-generated method stub
 		/*
@@ -289,7 +291,7 @@ public class MyAIController extends CarController{
 		 float diffAngle  = Math.abs(deltaAngle);
 
 		 if(diffAngle > 3f) {
-			 if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
+			 if(deltaAngle > 0 && deltaAngle <= 180 || deltaAngle >-360 && deltaAngle <= -180) {
 				 System.out.println("LEFT in turn");
 				 turnLeft(delta);
 				 return;

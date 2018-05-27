@@ -52,6 +52,7 @@ public class CollectKeyStrategy implements IMoveStrategy {
 //		Arrays.sort(keys, Collections.reverseOrder());
 		// got all keys in order, now let's get of this shit
 		if(keyRemaining == 1) {
+			System.out.println("Getting Finish");
 			HashMap<Coordinate, MapTile> map = myMap.getMap();
 			Iterator<Coordinate> mark = map.keySet().iterator();
 			Coordinate coord = null;

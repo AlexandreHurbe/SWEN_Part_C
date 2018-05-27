@@ -16,7 +16,7 @@ public class PathFinding {
 	IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	private Coordinate destination;
-	private  int lowHealth = 55;
+	private  int lowHealth = 66;
 
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -34,7 +34,7 @@ public class PathFinding {
 		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		if(this.strategy instanceof CollectKeyStrategy) {
-			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.keysRemaining);
+			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.getKey());
 			if(myMap.getMap().get(this.destination).isType(MapTile.Type.FINISH)) {
 				System.out.println("------------------------------CHANGE LOWHEALTH VALUE----------------------");
 				this.lowHealth = 20;
@@ -56,15 +56,15 @@ public class PathFinding {
 		}
 		
 		if (controller.needHealing) {
-			System.out.println("***************************LowHealthStrategy***************************");
+			System.out.println("LowHealthStrategy");
 			return factory.getMoveStrategy("LowHealthExplore");
 		}
 		else if (myMap.returnKeyStorage() != null && controller.keysToCollect - myMap.returnKeyStorage().size() == 1) {
-			System.out.println("***************************CollectKeyStrategy***************************");
+			System.out.println("CollectKeyStrategy");
 			return factory.getMoveStrategy("CollectKeyStrategy");
 		}
 		else {
-			System.out.println("***************************ExploreStrategy***************************");
+			System.out.println("ExploreStrategy");
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
