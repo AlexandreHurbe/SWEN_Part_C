@@ -21,7 +21,7 @@ public abstract class TrapHandler {
         this.view = view;
     }
     
-    public abstract boolean handleTrap(Path path);
+    public abstract boolean handleTrap();
     
     
 }

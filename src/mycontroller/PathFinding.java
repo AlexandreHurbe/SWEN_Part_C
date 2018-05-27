@@ -6,38 +6,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
-import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
-public class PathFinding implements IDistance {
+public class PathFinding {
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();
-	private IMoveStrategy strategy;
+	IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	private Coordinate destination;
-	private int lowHealthThreshold = 66;
+	private  int lowHealth = 66;
 
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-		// TODO Auto-generated constructor stub
-//		try {
-//			this.strategy = chooseStrategy();
-//		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		this.strategy =  new ExploreStrategy();
 
-		//this.strategy = chooseStrategy(controller);
-		//this.strategy = new LowHealthExplore();
+
 		this.strategy = chooseStrategy(controller);
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		if(this.strategy instanceof CollectKeyStrategy) {
 			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.getKey());
 			if(myMap.getMap().get(this.destination).isType(MapTile.Type.FINISH)) {
 				System.out.println("------------------------------CHANGE LOWHEALTH VALUE----------------------");
-				this.lowHealthThreshold = 20;
+				this.lowHealth = 20;
 			}
 		}else {
 			this.destination = this.strategy.getDestination();
@@ -51,7 +41,7 @@ public class PathFinding implements IDistance {
 		if (controller.getHealth() == 100) {
 			controller.needHealing = false;
 		}
-		if (controller.getHealth() < lowHealthThreshold) {
+		if (controller.getHealth() < lowHealth) {
 			controller.needHealing = true;
 		}
 		
@@ -68,16 +58,6 @@ public class PathFinding implements IDistance {
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
-//	private boolean isHealthTrap() {
-//		Iterator<Coordinate> mark = myMap.getMarkMap().keySet().iterator();
-//		while(mark.hasNext()) {
-//			if(myMap.getMarkMap().get(mark.next()) instanceof HealthTrap) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-	
 	// use A* to find path to destination
 	public HashMap<Coordinate, Float> findPath() {
 		Coordinate start = myMap.getPosition();
@@ -165,7 +145,7 @@ public class PathFinding implements IDistance {
 		while(mapTiles.hasNext()) {
 			coord = mapTiles.next();
 			tile = myMap.getMap().get(coord);
-//			System.out.println(((MapTile)tile).getType().toString());
+
 			if(!tile.isType(MapTile.Type.WALL)) {
 				mapping.put(coord, null);
 			}
@@ -173,11 +153,7 @@ public class PathFinding implements IDistance {
 		}
 		return mapping;
 	}
-//	// basic heuristic function for 2 coordinates
-//	private int estimateCost(Coordinate start, Coordinate destination) {
-//		int estimateCost = Math.abs(destination.x - start.x) + Math.abs(destination.y - start.y);
-//		return estimateCost;
-//	}
+
 	// find the lowest costed neighbor node
 	private Coordinate lowestCost(List<Coordinate> openSet, HashMap<Coordinate, Integer> score) {
 		Iterator<Coordinate> setTiles = openSet.iterator();
@@ -216,7 +192,10 @@ public class PathFinding implements IDistance {
 		return neighbors;
 	}
 	// actual distance between 2 coordinates
-	
+	public int distance(Coordinate from, Coordinate to) {
+		int distance = Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+		return distance;
+	}
 	
 	// construct the route to destination using this data structure
 	private HashMap<Coordinate, Float> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
@@ -230,22 +209,38 @@ public class PathFinding implements IDistance {
 			}
 		}
 
-		//System.out.println(totalPath.toString());
 		// Formulate Path to be used by move
-		HashMap<Coordinate, Float> myPath;
-		Path path = new Path();
-		path.updatePath(totalPath);
-		myPath = path.getPath();
+		HashMap<Coordinate, Float> myPath = fomulatePath(totalPath);
 		return myPath;
 	}
+	
+	private HashMap<Coordinate, Float> fomulatePath(Stack<Coordinate> path) {
+		HashMap<Coordinate, Float> myPath = new HashMap<>();
+		// iterate through the stack and get directions
+		Coordinate currentCoord = path.pop();
+		while(!path.isEmpty()) {
+			Coordinate nextCoord = path.pop();
+			// get direction of current Coord
+			myPath.put(currentCoord, getAngle(currentCoord, nextCoord));
+			currentCoord = nextCoord;
+		}
+		
 
-	@Override
-	public int distance(Coordinate start, Coordinate end) {
-		int distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
-		return distance;
+		return myPath;
 	}
 	
-	
+	private float getAngle(Coordinate current, Coordinate next) {
+		int difX = next.x - current.x;
+		int difY = next.y - current.y;
+		float angle;
+		angle =  (float) Math.toDegrees(Math.atan2(difY, difX));
+		// prevent negative angles 	
+		if(angle < 0) {
+			angle += 360;
+		}
+
+		return angle;
+	}
 	
 	
 	
