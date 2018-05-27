@@ -5,12 +5,12 @@ import mycontroller.IMoveStrategy;
  * 
  */
 public class MyStrategyFactory {
-	private static MyStrategyFactory instance = new MyStrategyFactory();
-	
-	
-	public static MyStrategyFactory getInstance() {
-		return instance;
-	}
+//	private static MyStrategyFactory instance = new MyStrategyFactory();
+//	
+//	
+//	public static MyStrategyFactory getInstance() {
+//		return instance;
+//	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 

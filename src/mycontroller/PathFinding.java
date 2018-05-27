@@ -13,7 +13,7 @@ public class PathFinding implements IDistance{
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();
 	IMoveStrategy strategy;
-	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
+	private MyStrategyFactory factory = new MyStrategyFactory();
 	private Coordinate destination;
 	private  int lowHealth = 66;
 
