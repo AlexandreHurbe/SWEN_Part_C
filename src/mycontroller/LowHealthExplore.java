@@ -12,7 +12,7 @@ import utilities.Coordinate;
 public class LowHealthExplore extends ExploreStrategy{
 	
 	MyMap myMap = MyMap.getInstance();
-	
+	HandlerLibrary handlers = HandlerLibrary.getInstance();
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
 		int lava = 10;
@@ -24,24 +24,24 @@ public class LowHealthExplore extends ExploreStrategy{
 		if (myMap.getMap().get(end) instanceof HealthTrap) {
 			cost +=health;
 		}
-		
-		return cost + surroundWall(end);
+		Handler wallHandler = handlers.getHandler("wallHandler");
+		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 	}
-	private int surroundWall(Coordinate end) {
-		int wall = 0;
-		Coordinate current;
-		for(int i = -1; i < 1; i++) {
-			for (int j = -1; j < 1 ; j++) {
-				current = new Coordinate(end.x+i, end.y+j);
-				if(myMap.getMap().get(current) != null) {
-					if(myMap.getMap().get(current).isType(Type.WALL)) {
-						wall +=1;
-					}
-				}
-			}
-		}
-		return wall;
-	}
+//	private int surroundWall(Coordinate end) {
+//		int wall = 0;
+//		Coordinate current;
+//		for(int i = -1; i < 1; i++) {
+//			for (int j = -1; j < 1 ; j++) {
+//				current = new Coordinate(end.x+i, end.y+j);
+//				if(myMap.getMap().get(current) != null) {
+//					if(myMap.getMap().get(current).isType(Type.WALL)) {
+//						wall +=1;
+//					}
+//				}
+//			}
+//		}
+//		return wall;
+//	}
 
 	@SuppressWarnings("null")
 	@Override

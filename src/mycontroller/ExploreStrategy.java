@@ -6,11 +6,11 @@ import java.util.Iterator;
 import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
-import tiles.MapTile.Type;
 import utilities.Coordinate;
 
 public class ExploreStrategy implements IMoveStrategy {
 	MyMap myMap = MyMap.getInstance();
+	HandlerLibrary handlers = HandlerLibrary.getInstance();
 	
 //	public abstract void explore(View currentView, Float health);
 	@Override
@@ -113,24 +113,24 @@ public class ExploreStrategy implements IMoveStrategy {
 		if (myMap.getMap().get(end) instanceof HealthTrap) {
 			cost +=health;
 		}
-		cost += surroundWall(end);
-		return cost;
+		Handler wallHandler = handlers.getHandler("wallHandler");
+		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 	}
 	
-	private int surroundWall(Coordinate end) {
-		int wall = 0;
-		Coordinate current;
-		for(int i = -1; i < 1; i++) {
-			for (int j = -1; j < 1 ; j++) {
-				current = new Coordinate(end.x+i, end.y+j);
-				if(myMap.getMap().get(current) != null) {
-					if(myMap.getMap().get(current).isType(Type.WALL)) {
-						wall +=1;
-					}
-				}
-			}
-		}
-		return wall;
-	}
+//	private int surroundWall(Coordinate end) {
+//		int wall = 0;
+//		Coordinate current;
+//		for(int i = -1; i < 1; i++) {
+//			for (int j = -1; j < 1 ; j++) {
+//				current = new Coordinate(end.x+i, end.y+j);
+//				if(myMap.getMap().get(current) != null) {
+//					if(myMap.getMap().get(current).isType(Type.WALL)) {
+//						wall +=1;
+//					}
+//				}
+//			}
+//		}
+//		return wall;
+//	}
 	
 }

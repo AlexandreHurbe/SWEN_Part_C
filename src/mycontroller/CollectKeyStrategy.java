@@ -14,6 +14,7 @@ import utilities.Coordinate;
 public class CollectKeyStrategy implements IMoveStrategy {
 	
 	MyMap myMap = MyMap.getInstance();
+	HandlerLibrary handlers = HandlerLibrary.getInstance();
 //	Coordinate dest;
 	
 
@@ -64,22 +65,23 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		if(myMap.getMap().get(end).isType(MapTile.Type.ROAD)) {
 			cost += road;
 		}
-		return cost + surroundWall(end);
+		Handler wallHandler = handlers.getHandler("wallHandler");
+		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 		
 	}
-	private int surroundWall(Coordinate end) {
-		int wall = 0;
-		Coordinate current;
-		for(int i = -1; i < 1; i++) {
-			for (int j = -1; j < 1 ; j++) {
-				current = new Coordinate(end.x+i, end.y+j);
-				if(myMap.getMap().get(current) != null) {
-					if(myMap.getMap().get(current).isType(Type.WALL)) {
-						wall +=1;
-					}
-				}
-			}
-		}
-		return wall;
-	}
+//	private int surroundWall(Coordinate end) {
+//		int wall = 0;
+//		Coordinate current;
+//		for(int i = -1; i < 1; i++) {
+//			for (int j = -1; j < 1 ; j++) {
+//				current = new Coordinate(end.x+i, end.y+j);
+//				if(myMap.getMap().get(current) != null) {
+//					if(myMap.getMap().get(current).isType(Type.WALL)) {
+//						wall +=1;
+//					}
+//				}
+//			}
+//		}
+//		return wall;
+//	}
 }

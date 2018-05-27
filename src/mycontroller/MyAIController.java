@@ -26,6 +26,8 @@ public class MyAIController extends CarController{
 	public MyAIController(Car car) {
 		super(car);	
 		myMap.setOriginalMap(getMap(), new Coordinate(getPosition()));
+		HandlerLibrary handlers = HandlerLibrary.getInstance();
+		handlers.initialise();
 	}
 	
 	@Override
