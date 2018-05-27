@@ -78,7 +78,7 @@ public class PathFinding implements IDistance{
 		// passing by this node
 		HashMap<Coordinate, Integer> fScore = initScore();
 		// calculate the estimateCost for start point to goal
-		fScore.put(start, strategy.estimateCost(start, destination));
+		fScore.put(start, strategy.distance(start, destination));
 		
 		//
 		while(!openSet.isEmpty()) {
@@ -101,14 +101,14 @@ public class PathFinding implements IDistance{
 					if(!openSet.contains(neighbor)) {
 						openSet.add(neighbor);
 					}
-					int combinedGscore = gScore.get(current) + strategy.distance(current, neighbor);
+					int combinedGscore = gScore.get(current) + strategy.estimateCost(current, neighbor);
 
 					if(combinedGscore >= gScore.get(neighbor)) {
 						continue;
 					}
 					cameFrom.put(neighbor, current);
 					gScore.put(neighbor, combinedGscore);
-					fScore.put(neighbor, gScore.get(neighbor) + strategy.estimateCost(neighbor, destination));
+					fScore.put(neighbor, gScore.get(neighbor) + strategy.distance(neighbor, destination));
 				}
 			}
 			else {

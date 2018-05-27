@@ -13,7 +13,7 @@ public class LowHealthExplore extends ExploreStrategy{
 	MyMap myMap = MyMap.getInstance();
 	HandlerLibrary handlers = HandlerLibrary.getInstance();
 	@Override
-	public int distance(Coordinate start, Coordinate end) {
+	public int estimateCost(Coordinate start, Coordinate end) {
 		int lava = 10;
 		int health = -5;
 		int cost = estimateCost(start, end);
@@ -65,12 +65,12 @@ public class LowHealthExplore extends ExploreStrategy{
 			return alterCoord;
 		}
 	}
+	
 	@Override
-	public int estimateCost(Coordinate start, Coordinate end) {
-		int estimateCost;
-		estimateCost = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
-		return estimateCost;
+	public int distance(Coordinate start, Coordinate end) {
+		// TODO Auto-generated method stub
+		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
-		
+		return distance;
 	}
 }

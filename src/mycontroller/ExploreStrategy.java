@@ -66,22 +66,19 @@ public class ExploreStrategy implements IMoveStrategy {
 	
 	
 	@Override
-	public int estimateCost(Coordinate start, Coordinate end) {
+	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
-		// make health smaller and 
-//		System.out.println(start.toString()+ en);
-		int estimateCost = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
+		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
-		return estimateCost;
-
+		return distance;
 	}
 
 	@Override
-	public int distance(Coordinate start, Coordinate end) {
+	public int estimateCost(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		int lava = 30;
 		int health = 0;
-		int cost = estimateCost(start, end);
+		int cost = distance(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;
 		}
