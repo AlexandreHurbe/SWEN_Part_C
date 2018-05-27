@@ -156,6 +156,21 @@ public class MyMap {
 		}
 	}
 	
+	public Coordinate getExit() {
+		Iterator<Coordinate> mark = this.map.keySet().iterator();
+		Coordinate coord = null;
+		while(mark.hasNext()) {
+			
+			coord = mark.next();
+			MapTile tile = map.get(coord);
+			if(tile != null) {
+				if(tile.getType().equals(MapTile.Type.FINISH)) {
+					return coord;
+				}
+			}
+		}
+		return coord;
+	}
 		
 	
 	public HashMap<Integer, Coordinate>returnKeyStorage() {

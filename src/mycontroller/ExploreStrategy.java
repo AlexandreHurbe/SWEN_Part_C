@@ -25,7 +25,7 @@ public class ExploreStrategy implements IMoveStrategy {
 //		System.out.println(markMap.keySet());
 		int minDist = Integer.MAX_VALUE;
 		if(!reachedDest()) {
-			minCoord = findDest();
+			minCoord = myMap.getExit();
 		}else {
 			while(mark.hasNext()) {
 				
@@ -50,7 +50,7 @@ public class ExploreStrategy implements IMoveStrategy {
 		//System.out.println("found destination" + minCoord.toString());
 		
 		if(minCoord == null) {
-			minCoord = findDest();
+			minCoord = myMap.getExit();
 		}
 		System.out.println("Found destination in exploreStrategy: " + minCoord.toString());
 		return minCoord;
@@ -74,22 +74,22 @@ public class ExploreStrategy implements IMoveStrategy {
 		}
 		return false;
 	}
-	private Coordinate findDest() {
-		HashMap<Coordinate, MapTile> map = myMap.getMap();
-		Iterator<Coordinate> mark = map.keySet().iterator();
-		Coordinate coord = null;
-		while(mark.hasNext()) {
-			
-			coord = mark.next();
-			MapTile tile = map.get(coord);
-			if(tile != null) {
-				if(tile.getType().equals(MapTile.Type.FINISH)) {
-					return coord;
-				}
-			}
-		}
-		return coord;
-	}
+//	private Coordinate findDest() {
+//		HashMap<Coordinate, MapTile> map = myMap.getMap();
+//		Iterator<Coordinate> mark = map.keySet().iterator();
+//		Coordinate coord = null;
+//		while(mark.hasNext()) {
+//			
+//			coord = mark.next();
+//			MapTile tile = map.get(coord);
+//			if(tile != null) {
+//				if(tile.getType().equals(MapTile.Type.FINISH)) {
+//					return coord;
+//				}
+//			}
+//		}
+//		return coord;
+//	}
 	
 	
 	@Override

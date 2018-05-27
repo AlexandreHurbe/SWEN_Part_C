@@ -53,20 +53,22 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		// got all keys in order, now let's get of this shit
 		if(keyRemaining == 1) {
 			System.out.println("Getting Finish");
-			HashMap<Coordinate, MapTile> map = myMap.getMap();
-			Iterator<Coordinate> mark = map.keySet().iterator();
-			Coordinate coord = null;
-			while(mark.hasNext()) {
-				
-				coord = mark.next();
-				MapTile tile = map.get(coord);
-				if(tile != null) {
-					if(tile.getType().equals(MapTile.Type.FINISH)) {
-						System.out.println("Find Finish: " + coord.toString());
-						return coord;
-					}
-				}
-			}
+//			HashMap<Coordinate, MapTile> map = myMap.getMap();
+//			Iterator<Coordinate> mark = map.keySet().iterator();
+//			Coordinate coord = null;
+//			while(mark.hasNext()) {
+//				
+//				coord = mark.next();
+//				MapTile tile = map.get(coord);
+//				if(tile != null) {
+//					if(tile.getType().equals(MapTile.Type.FINISH)) {
+//						System.out.println("Find Finish: " + coord.toString());
+//						return coord;
+//					}
+//				}
+//			}
+			Coordinate exit = myMap.getExit();
+			return exit;
 		}
 		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keyRemaining - 1);
 		Coordinate dest = new Coordinate(coord.x, coord.y);
