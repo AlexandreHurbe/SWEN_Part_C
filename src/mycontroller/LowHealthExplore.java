@@ -6,7 +6,6 @@ import java.util.Iterator;
 import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
-import tiles.MapTile.Type;
 import utilities.Coordinate;
 
 public class LowHealthExplore extends ExploreStrategy{
@@ -27,23 +26,7 @@ public class LowHealthExplore extends ExploreStrategy{
 		Handler wallHandler = handlers.getHandler("wallHandler");
 		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 	}
-//	private int surroundWall(Coordinate end) {
-//		int wall = 0;
-//		Coordinate current;
-//		for(int i = -1; i < 1; i++) {
-//			for (int j = -1; j < 1 ; j++) {
-//				current = new Coordinate(end.x+i, end.y+j);
-//				if(myMap.getMap().get(current) != null) {
-//					if(myMap.getMap().get(current).isType(Type.WALL)) {
-//						wall +=1;
-//					}
-//				}
-//			}
-//		}
-//		return wall;
-//	}
 
-	@SuppressWarnings("null")
 	@Override
 	public Coordinate getDestination() {
 //		System.out.println("start explore key");

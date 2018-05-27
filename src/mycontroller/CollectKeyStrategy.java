@@ -1,21 +1,14 @@
 package mycontroller;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-
 import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
-import tiles.MapTile.Type;
 import utilities.Coordinate;
 
 public class CollectKeyStrategy implements IMoveStrategy {
 	
 	MyMap myMap = MyMap.getInstance();
 	HandlerLibrary handlers = HandlerLibrary.getInstance();
-//	Coordinate dest;
 	
 
 	@Override
@@ -69,19 +62,4 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 		
 	}
-//	private int surroundWall(Coordinate end) {
-//		int wall = 0;
-//		Coordinate current;
-//		for(int i = -1; i < 1; i++) {
-//			for (int j = -1; j < 1 ; j++) {
-//				current = new Coordinate(end.x+i, end.y+j);
-//				if(myMap.getMap().get(current) != null) {
-//					if(myMap.getMap().get(current).isType(Type.WALL)) {
-//						wall +=1;
-//					}
-//				}
-//			}
-//		}
-//		return wall;
-//	}
 }

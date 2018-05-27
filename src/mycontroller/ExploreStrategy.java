@@ -12,16 +12,14 @@ public class ExploreStrategy implements IMoveStrategy {
 	MyMap myMap = MyMap.getInstance();
 	HandlerLibrary handlers = HandlerLibrary.getInstance();
 	
-//	public abstract void explore(View currentView, Float health);
 	@Override
 	public Coordinate getDestination() {
-//		System.out.println("start explore key");
+
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
-//		Coordinate currentPosition = myMap.getPosition();
-//		System.out.println(markMap.toString());
+
 		Coordinate coord = null, minCoord = null;
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
-//		System.out.println(markMap.keySet());
+
 		int minDist = Integer.MAX_VALUE;
 		if(!reachedDest()) {
 			minCoord = myMap.getExit();
@@ -29,9 +27,7 @@ public class ExploreStrategy implements IMoveStrategy {
 			while(mark.hasNext()) {
 				
 				coord = mark.next();
-				
-	//			System.out.println(coord);
-	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
+	
 				if(markMap.get(coord) == null) {
 					int distance = estimateCost(myMap.getPosition(), coord);
 					if(distance < minDist) {
@@ -42,11 +38,6 @@ public class ExploreStrategy implements IMoveStrategy {
 				}
 			}
 		}
-
-		//System.out.println("found destination" + this.coord.toString());
-
-		//System.out.println("found destination" + minCoord.toString());
-		
 		if(minCoord == null) {
 			minCoord = myMap.getExit();
 		}
@@ -72,22 +63,6 @@ public class ExploreStrategy implements IMoveStrategy {
 		}
 		return false;
 	}
-//	private Coordinate findDest() {
-//		HashMap<Coordinate, MapTile> map = myMap.getMap();
-//		Iterator<Coordinate> mark = map.keySet().iterator();
-//		Coordinate coord = null;
-//		while(mark.hasNext()) {
-//			
-//			coord = mark.next();
-//			MapTile tile = map.get(coord);
-//			if(tile != null) {
-//				if(tile.getType().equals(MapTile.Type.FINISH)) {
-//					return coord;
-//				}
-//			}
-//		}
-//		return coord;
-//	}
 	
 	
 	@Override
@@ -117,20 +92,5 @@ public class ExploreStrategy implements IMoveStrategy {
 		return cost + ((WallHandler)wallHandler).handleMapTile(end);
 	}
 	
-//	private int surroundWall(Coordinate end) {
-//		int wall = 0;
-//		Coordinate current;
-//		for(int i = -1; i < 1; i++) {
-//			for (int j = -1; j < 1 ; j++) {
-//				current = new Coordinate(end.x+i, end.y+j);
-//				if(myMap.getMap().get(current) != null) {
-//					if(myMap.getMap().get(current).isType(Type.WALL)) {
-//						wall +=1;
-//					}
-//				}
-//			}
-//		}
-//		return wall;
-//	}
 	
 }
