@@ -13,7 +13,7 @@ public class LavaHandler extends TrapHandler{
 	}
 
 	@Override
-	public boolean handleTrap(Path path) {
+	public boolean handleTrap() {
 		// TODO Auto-generated method stub
 		return false;
 	}

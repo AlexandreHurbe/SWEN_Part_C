@@ -3,18 +3,8 @@
  */
 package mycontroller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.ConcurrentLinkedDeque;
-
-
-import javax.print.attribute.standard.Destination;
-
-
-import javax.print.attribute.standard.Destination;
-
 import tiles.LavaTrap;
 import tiles.MapTile;
 import tiles.MapTile.Type;
@@ -26,9 +16,6 @@ import utilities.Coordinate;
  */
 public class MyMap {
 
-	/**
-	 * 
-	 */
 	private static MyMap instance = new MyMap();
 	
 	

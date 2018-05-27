@@ -28,46 +28,21 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	@Override
 	public Coordinate getDestination() {
 		// TODO Auto-generated method stub
-		//if currentKey = -1
-//		Object[] keys = myMap.returnKeyStorage().keySet().toArray();
-//		Arrays.sort(keys, Collections.reverseOrder());
-//		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keys[0]);
-//		Coordinate dest = new Coordinate(coord.x, coord.y);
-		//myMap.returnKeyStorage().remove(keys[0]);
-		//System.out.println("KeyStorage: " + myMap.returnKeyStorage().toString());
-		//System.out.println("Dest in collectKey: " + dest.toString());
 		return null;
 	}
 	
 
 	public Coordinate getDestination(int keyRemaining) {
-//		Object[] keys = myMap.returnKeyStorage().keySet().toArray();
-//		Arrays.sort(keys, Collections.reverseOrder());
-		// got all keys in order, now let's get of this shit
+
+		//  got all keys go to exit
 		if(keyRemaining == 1) {
 			System.out.println("Getting Finish");
-//			HashMap<Coordinate, MapTile> map = myMap.getMap();
-//			Iterator<Coordinate> mark = map.keySet().iterator();
-//			Coordinate coord = null;
-//			while(mark.hasNext()) {
-//				
-//				coord = mark.next();
-//				MapTile tile = map.get(coord);
-//				if(tile != null) {
-//					if(tile.getType().equals(MapTile.Type.FINISH)) {
-//						System.out.println("Find Finish: " + coord.toString());
-//						return coord;
-//					}
-//				}
-//			}
 			Coordinate exit = myMap.getExit();
 			return exit;
 		}
+		// got all keys in order, now let's get key
 		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keyRemaining - 1);
 		Coordinate dest = new Coordinate(coord.x, coord.y);
-//		this.dest = dest;
-		//myMap.returnKeyStorage().remove(keys[0]);
-		//System.out.println("KeyStorage: " + myMap.returnKeyStorage().toString());
 		System.out.println("Dest in collectKey: " + dest.toString());
 		return dest;
 	}
