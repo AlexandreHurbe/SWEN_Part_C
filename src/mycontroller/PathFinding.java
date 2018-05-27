@@ -9,7 +9,7 @@ import java.util.Stack;
 import tiles.MapTile;
 import utilities.Coordinate;
 
-public class PathFinding {
+public class PathFinding implements IDistance{
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();
 	IMoveStrategy strategy;
@@ -192,6 +192,7 @@ public class PathFinding {
 		return neighbors;
 	}
 	// actual distance between 2 coordinates
+	@Override
 	public int distance(Coordinate from, Coordinate to) {
 		int distance = Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
 		return distance;
