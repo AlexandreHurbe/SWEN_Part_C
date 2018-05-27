@@ -6,6 +6,7 @@ import java.util.Collections;
 import tiles.HealthTrap;
 import tiles.LavaTrap;
 import tiles.MapTile;
+import tiles.MapTile.Type;
 import utilities.Coordinate;
 
 public class CollectKeyStrategy implements IMoveStrategy {
@@ -60,9 +61,9 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		
-		int lava = 100;
-		int health = -10;
-		int road = 1;
+		int lava = 30;
+		int health = 0;
+		int road = 0;
 		int cost = estimateCost(start, end);
 		if (myMap.getMap().get(end) instanceof LavaTrap) {
 			cost += lava;
@@ -73,7 +74,22 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		if(myMap.getMap().get(end).isType(MapTile.Type.ROAD)) {
 			cost += road;
 		}
-		return cost;
+		return cost + surroundWall(end);
 		
+	}
+	private int surroundWall(Coordinate end) {
+		int wall = 0;
+		Coordinate current;
+		for(int i = -1; i < 1; i++) {
+			for (int j = -1; j < 1 ; j++) {
+				current = new Coordinate(end.x+i, end.y+j);
+				if(myMap.getMap().get(current) != null) {
+					if(myMap.getMap().get(current).isType(Type.WALL)) {
+						wall +=1;
+					}
+				}
+			}
+		}
+		return wall;
 	}
 }

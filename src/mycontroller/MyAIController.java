@@ -3,6 +3,7 @@ package mycontroller;
 import java.util.HashMap;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 
 import controller.CarController;
 import tiles.HealthTrap;
@@ -19,8 +20,9 @@ public class MyAIController extends CarController{
 
 	private float SPEED_LIM = 3f;
 	private static final float MAX_DEGREES = 360;
-	private static final float MAX_SPEED = 4f;
+	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 3f;
+	private static final float TURN_SPEED = 1f;
 	private boolean SHOULD_SPEED = false;
 	
 
@@ -95,8 +97,8 @@ public class MyAIController extends CarController{
 		
 		float xPos = getX();
 		float yPos = getY();
-		float angleDiff = 0.01f;
-		float posDiff = 0.001f;
+		float angleDiff = 0.3f;
+		float posDiff = 0.1f;
 		System.out.println("Xpos is:" + xPos);
 		System.out.println("Ypos is:" + yPos);
 		System.out.println("coord is:" + currentCoord);
@@ -172,6 +174,7 @@ public class MyAIController extends CarController{
 				applyReverseAcceleration();
 				turn(delta);
 			} else {
+				SPEED_LIM = TURN_SPEED;
 				accelerate();
 				turn(delta);
 			}
@@ -285,7 +288,7 @@ public class MyAIController extends CarController{
 		 float deltaAngle = goalAngle - currentAngle;
 		 float diffAngle  = Math.abs(deltaAngle);
 
-		 if(diffAngle > 0.01f) {
+		 if(diffAngle > 3f) {
 			 if(deltaAngle > 0 && deltaAngle < 180 || deltaAngle >-360 && deltaAngle < -180) {
 				 System.out.println("LEFT in turn");
 				 turnLeft(delta);
