@@ -16,6 +16,7 @@ public class PathFinding {
 	IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	private Coordinate destination;
+	private  int lowHealth = 55;
 
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -34,6 +35,10 @@ public class PathFinding {
 		myMap.update(new Coordinate(controller.getPosition()), controller.getView());
 		if(this.strategy instanceof CollectKeyStrategy) {
 			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.keysRemaining);
+			if(myMap.getMap().get(this.destination).isType(MapTile.Type.FINISH)) {
+				System.out.println("------------------------------CHANGE LOWHEALTH VALUE----------------------");
+				this.lowHealth = 20;
+			}
 		}else {
 			this.destination = this.strategy.getDestination();
 		}
@@ -46,7 +51,7 @@ public class PathFinding {
 		if (controller.getHealth() == 100) {
 			controller.needHealing = false;
 		}
-		if (controller.getHealth() < 60) {
+		if (controller.getHealth() < lowHealth) {
 			controller.needHealing = true;
 		}
 		

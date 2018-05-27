@@ -48,7 +48,10 @@ public class ExploreStrategy implements IMoveStrategy {
 		//System.out.println("found destination" + this.coord.toString());
 
 		//System.out.println("found destination" + minCoord.toString());
-
+		
+		if(minCoord == null) {
+			minCoord = findDest();
+		}
 		System.out.println("Found destination in exploreStrategy: " + minCoord.toString());
 		return minCoord;
 		
@@ -87,6 +90,8 @@ public class ExploreStrategy implements IMoveStrategy {
 		}
 		return coord;
 	}
+	
+	
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub

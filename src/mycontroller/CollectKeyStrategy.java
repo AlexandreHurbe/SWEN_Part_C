@@ -2,6 +2,8 @@ package mycontroller;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import tiles.HealthTrap;
 import tiles.LavaTrap;
@@ -48,6 +50,23 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	public Coordinate getDestination(int keyRemaining) {
 //		Object[] keys = myMap.returnKeyStorage().keySet().toArray();
 //		Arrays.sort(keys, Collections.reverseOrder());
+		// got all keys in order, now let's get of this shit
+		if(keyRemaining == 1) {
+			HashMap<Coordinate, MapTile> map = myMap.getMap();
+			Iterator<Coordinate> mark = map.keySet().iterator();
+			Coordinate coord = null;
+			while(mark.hasNext()) {
+				
+				coord = mark.next();
+				MapTile tile = map.get(coord);
+				if(tile != null) {
+					if(tile.getType().equals(MapTile.Type.FINISH)) {
+						System.out.println("Find Finish: " + coord.toString());
+						return coord;
+					}
+				}
+			}
+		}
 		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keyRemaining - 1);
 		Coordinate dest = new Coordinate(coord.x, coord.y);
 		this.dest = dest;

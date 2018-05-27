@@ -66,7 +66,7 @@ public class LowHealthExplore extends ExploreStrategy{
 					minDistance = currentDistance;
 					minCoord = coord;
 				}
-				System.out.println("Found health at: " + coord.toString());
+				//System.out.println("Found health at: " + coord.toString());
 			}
 			if(markMap.get(coord) == null) {
 				alterCoord = coord;

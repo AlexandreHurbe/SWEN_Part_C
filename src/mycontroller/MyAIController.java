@@ -97,8 +97,8 @@ public class MyAIController extends CarController{
 		
 		float xPos = getX();
 		float yPos = getY();
-		float angleDiff = 0.3f;
-		float posDiff = 0.1f;
+		float angleDiff = 0.2f;
+		float posDiff = 0.05f;
 		System.out.println("Xpos is:" + xPos);
 		System.out.println("Ypos is:" + yPos);
 		System.out.println("coord is:" + currentCoord);
