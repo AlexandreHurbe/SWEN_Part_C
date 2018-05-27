@@ -26,11 +26,11 @@ public class MyMap {
 	
 	
 	private MyMap() {}
-	
+	// singleton
 	public static MyMap getInstance() {
 		return instance;
 	}
-	
+	// initialize everything
 	public void setOriginalMap(HashMap<Coordinate, MapTile> map, Coordinate position) {
 		this.map = map;
 		this.position = position;
@@ -47,12 +47,16 @@ public class MyMap {
 		Coordinate coord;
 		while(allCoords.hasNext()) {
 			coord = allCoords.next();
-			
 				
 			if(map.get(coord).isType(MapTile.Type.ROAD) ||map.get(coord).isType(MapTile.Type.FINISH)) {
+				// initialize all road or finish to null
+				// when it is possible to get to there
 				if(isPassable(coord)) {
 					markMap.put(coord, null);
+				// not possible to get to there
 				}else {
+					// give a wall type tile to that coordinate
+					// so will not try to find destination to here
 					markMap.put(coord, new MapTile(Type.WALL));
 				}
 			}
@@ -61,13 +65,16 @@ public class MyMap {
 		return markMap;
 		
 	}
+	// check if the destination is passable 
 	private boolean isPassable(Coordinate destination) {
-		// check if the destination is passable from the start
+		// where we have traveled
 		HashMap<Coordinate, Boolean> traveled = new HashMap<>();
 		
 		Coordinate end = detectPath(this.position, destination, traveled);
-		
+		// when this destination is not passable it will return null
 		while((end = detectPath(end, destination, traveled)) != null) {
+			// find a coordinate and it is the destination,
+			// then it is passable
 			if(end.equals(destination)) {
 				return true;
 			}
@@ -78,14 +85,17 @@ public class MyMap {
 	
 	private Coordinate detectPath(Coordinate current, Coordinate destination, HashMap<Coordinate, Boolean> traveled){
 
+		// give traveled an initial set
 		Coordinate nextNe;
-
+			// check surroundings
 			for (int i =-1; i<=1; i++) {
 				for(int j =-1; j<=1; j++) {
 					// should be within map
 					nextNe = new Coordinate(current.x+i, current.y+j);
 					MapTile tile = this.map.get(nextNe);
+					// check within map
 					if(tile!=null) {
+						// check if able to pass and not being traveled before
 						if(!tile.isType(Type.WALL) && !traveled.containsKey(nextNe)) {
 							traveled.put(nextNe, true);
 							return nextNe;
@@ -93,6 +103,8 @@ public class MyMap {
 					}
 				}
 			}
+			
+		// now search for rest of the map
 		Iterator<Coordinate> coords = traveled.keySet().iterator();
 		while(coords.hasNext()) {
 			Coordinate next = coords.next();
@@ -111,8 +123,8 @@ public class MyMap {
 			}
 			
 		}
-		
-			return null;
+		// found all the map and nothing
+		return null;
 	}
 					
 
@@ -126,6 +138,8 @@ public class MyMap {
 		Iterator<Coordinate> viewCoords = view.keySet().iterator();
 		Coordinate coord;
 		MapTile actualTile;
+		// update view into map and mark map
+		// also keys into key storage
 		while(viewCoords.hasNext()) {
 			coord = viewCoords.next();
 			actualTile = view.get(coord);
@@ -133,19 +147,17 @@ public class MyMap {
 				int keyNum = ((LavaTrap)actualTile).getKey();
 				if ( keyNum > 0 && !keyStorage.containsKey(keyNum)) {
 					keyStorage.put(keyNum, coord);
-					System.out.println("Add key: " + ((LavaTrap)actualTile).getKey() + " at " + coord.toString());
 				}
 			}
 			this.map.put(coord, actualTile);
 			this.markMap.put(coord, actualTile);
 		}
 	}
-	
+	// find the exit
 	public Coordinate getExit() {
 		Iterator<Coordinate> mark = this.map.keySet().iterator();
 		Coordinate coord = null;
 		while(mark.hasNext()) {
-			
 			coord = mark.next();
 			MapTile tile = map.get(coord);
 			if(tile != null) {

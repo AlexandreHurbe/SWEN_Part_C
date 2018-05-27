@@ -5,15 +5,9 @@ import mycontroller.IMoveStrategy;
  * 
  */
 public class MyStrategyFactory {
-//	private static MyStrategyFactory instance = new MyStrategyFactory();
-//	
-//	
-//	public static MyStrategyFactory getInstance() {
-//		return instance;
-//	}
 	
 	public IMoveStrategy getMoveStrategy(String strategyName) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-
+		// create strategy with this name 
 		try {
 			Class<?> clazz = Class.forName("mycontroller." + strategyName);
 			IMoveStrategy strategy = (IMoveStrategy) clazz.newInstance();

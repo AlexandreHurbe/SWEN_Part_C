@@ -15,7 +15,6 @@ public class CollectKeyStrategy implements IMoveStrategy {
 	public int distance(Coordinate start, Coordinate end) {
 		// TODO Auto-generated method stub
 		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
-		
 		return distance;
 	}
 
@@ -25,7 +24,6 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		return null;
 	}
 	
-
 	public Coordinate getDestination(int keyRemaining) {
 
 		//  got all keys go to exit

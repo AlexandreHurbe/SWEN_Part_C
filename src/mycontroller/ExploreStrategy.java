@@ -21,8 +21,10 @@ public class ExploreStrategy implements IMoveStrategy {
 		Iterator<Coordinate> mark = markMap.keySet().iterator();
 
 		int minDist = Integer.MAX_VALUE;
+		// explore to finish point first
 		if(!reachedDest()) {
 			minCoord = myMap.getExit();
+		// find closest unexplored point
 		}else {
 			while(mark.hasNext()) {
 				
@@ -38,14 +40,16 @@ public class ExploreStrategy implements IMoveStrategy {
 				}
 			}
 		}
+		// when there is no key to get and explored the whole map
 		if(minCoord == null) {
 			minCoord = myMap.getExit();
 		}
-		System.out.println("Found destination in exploreStrategy: " + minCoord.toString());
+
 		return minCoord;
 		
 
 	}
+	
 	private boolean reachedDest() {
 		HashMap<Coordinate, MapTile> markMap = myMap.getMarkMap();
 		Iterator<Coordinate> mark = markMap.keySet().iterator();

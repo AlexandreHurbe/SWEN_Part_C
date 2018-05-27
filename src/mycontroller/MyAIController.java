@@ -6,6 +6,7 @@ import controller.CarController;
 import tiles.HealthTrap;
 import utilities.Coordinate;
 import world.Car;
+import world.WorldSpatial;
 
 public class MyAIController extends CarController{
 
@@ -14,7 +15,8 @@ public class MyAIController extends CarController{
 	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 3f;
 	private static final float TURN_SPEED = 1f;
-
+	
+	
 	private int keysToCollect = getKey();
 	
 	private MyMap myMap = MyMap.getInstance();
@@ -25,19 +27,18 @@ public class MyAIController extends CarController{
 
 	public MyAIController(Car car) {
 		super(car);	
+		// initialize the map
 		myMap.setOriginalMap(getMap(), new Coordinate(getPosition()));
 		HandlerLibrary handlers = HandlerLibrary.getInstance();
+		// initialize the handler
 		handlers.initialise();
 	}
 	
 	@Override
 	public void update(float delta) {
-		System.out.println("###########################################UPDATE###########################################");
-		System.out.println("Keys: " + myMap.returnKeyStorage().toString());
-		System.out.println("keyRemaining: " + getKey());
-
 		// TODO Auto-generated method stub
-
+		
+		// avoid null path 
 		try {
 			pathFinding = new PathFinding(this);
 		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
@@ -45,8 +46,7 @@ public class MyAIController extends CarController{
 			e.printStackTrace();
 		}
 		path = pathFinding.findPath();
-		System.out.println("Path: " + path.toString());
-		
+		// slow down when close to health trap
 		if(nearHealthTrap()) {
 			applyBrake();
 		} else {
@@ -66,9 +66,10 @@ public class MyAIController extends CarController{
 	}
 	private boolean onPath() {
 		Coordinate currentCoord = new Coordinate(getPosition());
-		
+		// get current position on float
 		float xPos = getX();
 		float yPos = getY();
+		// difference threshold for testing on path
 		float angleDiff = 0.2f;
 		float posDiff = 0.05f;
 		System.out.println("Xpos is:" + xPos);
@@ -104,7 +105,7 @@ public class MyAIController extends CarController{
 		float goalAngle;
 		if(path.containsKey(currentCoord)) {
 			goalAngle = path.get(currentCoord);
-			if(goalAngle == 0f || goalAngle ==180f) {
+			if(goalAngle == WorldSpatial.EAST_DEGREE_MIN || goalAngle == WorldSpatial.WEST_DEGREE) {
 				return true;
 			}
 		}
@@ -115,7 +116,7 @@ public class MyAIController extends CarController{
 		float goalAngle;
 		if(path.containsKey(currentCoord)) {
 			goalAngle = path.get(currentCoord);
-			if(goalAngle == 90f || goalAngle ==270f) {
+			if(goalAngle == WorldSpatial.NORTH_DEGREE || goalAngle ==WorldSpatial.SOUTH_DEGREE) {
 				return true;
 			}
 		}
@@ -158,19 +159,22 @@ public class MyAIController extends CarController{
 		 float currentAngle = this.getAngle();
 		 float deltaAngle = goalAngle - currentAngle;
 		 float diffAngle  = Math.abs(deltaAngle);
-
-		 if(diffAngle > 3f) {
-			 if(deltaAngle > 0 && deltaAngle <= 180 || deltaAngle >-360 && deltaAngle <= -180) {
-				 System.out.println("LEFT in turn");
+		 // created after testing different numbers
+		 float maxDiff = 3f;
+		 if(diffAngle > maxDiff) {
+			 // left turn when turning left is closer to goal angle
+			 if(deltaAngle > WorldSpatial.EAST_DEGREE_MIN && deltaAngle <= WorldSpatial.WEST_DEGREE 
+					 || deltaAngle >-WorldSpatial.EAST_DEGREE_MAX && deltaAngle <= -WorldSpatial.WEST_DEGREE) {
 				 turnLeft(delta);
 				 return;
 			 } else {
-				 System.out.println("RIGHT in turn");
+		
 				 turnRight(delta);
 				 return;
 			 }
 		 } else {
-			 
+			 // when the turning phase is finished, the angle difference is smaller than 
+			 // maxDiff, the car will adjust its position
 			 adjustPosition(delta);
 		 }
 	}
@@ -187,7 +191,7 @@ public class MyAIController extends CarController{
 		 System.out.println("Xpos is:" + xPos);
 		 System.out.println("Ypos is:" + yPos);
 		 //up
-		 if(angle == 90f) {
+		 if(angle == WorldSpatial.NORTH_DEGREE) {
 			 if(xPos > (float)coord.x) {
 				 System.out.println("LEFT");
 				 turnLeft(delta);
@@ -200,7 +204,7 @@ public class MyAIController extends CarController{
 			 }
 		 }
 		//down
-		if(angle == 270f) {
+		if(angle == WorldSpatial.SOUTH_DEGREE) {
 			 if(xPos < (float)coord.x) {
 				 System.out.println("LEFT");
 				 turnLeft(delta);
@@ -213,7 +217,7 @@ public class MyAIController extends CarController{
 			 }
 		}
 		//right
-		if(angle == 0f) {
+		if(angle == WorldSpatial.EAST_DEGREE_MIN) {
 			 if(yPos > (float)coord.y) {
 				 System.out.println("RIGHT");
 				 turnRight(delta);
@@ -227,7 +231,7 @@ public class MyAIController extends CarController{
 			 
 		 }
 		//left
-		if(angle == 180f) {
+		if(angle == WorldSpatial.WEST_DEGREE) {
 			 if(yPos < (float)coord.y) {
 				 System.out.println("RIGHT");
 				 turnRight(delta);

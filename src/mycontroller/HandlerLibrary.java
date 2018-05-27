@@ -21,7 +21,7 @@ public class HandlerLibrary {
 		
 		
 	}
-	
+	// add new handlers
 	public boolean registerHandler(String name, Handler handler) {
 		this.handlers.put(name, handler);
 		if(this.handlers.containsValue(handler)) {
@@ -30,7 +30,7 @@ public class HandlerLibrary {
 			return false;
 		}
 	}
-	
+	// remove existed handlers
 	public boolean deregisterHandler(String name) {
 		this.handlers.remove(name);
 		if(this.handlers.containsKey(name)) {

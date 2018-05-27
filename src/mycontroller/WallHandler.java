@@ -10,6 +10,7 @@ public class WallHandler extends Handler{
 		
 	}
 	// check the tile is next to walls
+	// heuristic when calculating path 
 	public int handleMapTile(Coordinate end) {
 		int wall = 0;
 		Coordinate current;

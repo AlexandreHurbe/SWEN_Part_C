@@ -8,6 +8,7 @@ import java.util.Stack;
 
 import tiles.MapTile;
 import utilities.Coordinate;
+import world.WorldSpatial;
 
 public class PathFinding implements IDistance{
 	private static final Integer INFINITY = Integer.MAX_VALUE;
@@ -15,7 +16,8 @@ public class PathFinding implements IDistance{
 	IMoveStrategy strategy;
 	private MyStrategyFactory factory = new MyStrategyFactory();
 	private Coordinate destination;
-	private  int lowHealth = 66;
+	private int lowHealth = 66;
+	private final int DESTLOWHEALTH = 20;
 
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -26,8 +28,8 @@ public class PathFinding implements IDistance{
 		if(this.strategy instanceof CollectKeyStrategy) {
 			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.getKey());
 			if(myMap.getMap().get(this.destination).isType(MapTile.Type.FINISH)) {
-				System.out.println("------------------------------CHANGE LOWHEALTH VALUE----------------------");
-				this.lowHealth = 20;
+	
+				this.lowHealth = DESTLOWHEALTH;
 			}
 		}else {
 			this.destination = this.strategy.getDestination();
@@ -237,7 +239,7 @@ public class PathFinding implements IDistance{
 		angle =  (float) Math.toDegrees(Math.atan2(difY, difX));
 		// prevent negative angles 	
 		if(angle < 0) {
-			angle += 360;
+			angle += WorldSpatial.EAST_DEGREE_MAX;
 		}
 
 		return angle;
