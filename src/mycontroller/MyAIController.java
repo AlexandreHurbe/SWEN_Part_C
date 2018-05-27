@@ -82,9 +82,6 @@ public class MyAIController extends CarController{
 		// difference threshold for testing on path
 		float angleDiff = 0.2f;
 		float posDiff = 0.05f;
-		System.out.println("Xpos is:" + xPos);
-		System.out.println("Ypos is:" + yPos);
-		System.out.println("coord is:" + currentCoord);
 		if(isHorizontal()) {
 			//check Y position
 			if(almostSame(yPos, currentCoord.y, angleDiff) && almostSame(getAngle(), this.path.get(currentCoord)
@@ -140,9 +137,7 @@ public class MyAIController extends CarController{
 			speedLim = MAX_SPEED;
 			accelerate();
 		} else {
-			
-			System.out.println("Not On path");
-			System.out.println("Not On path, path: " + path.toString());
+	
 			speedLim = SLOW_SPEED;
 			
 			if(getSpeed() > SLOW_SPEED) {
@@ -191,24 +186,22 @@ public class MyAIController extends CarController{
  private void adjustPosition(float delta){
 	
 		// move towards where we suppose to be
-	 	 System.out.println("adjustPostion");
+
 		 float xPos = getX();
 		 float yPos = getY();
 		 Coordinate coord =  new Coordinate(getPosition());
-		 System.out.println("Coord is:" + coord.toString());
+
 		 float angle = path.get(coord);
-		 System.out.println("Angle is:" + angle);
-		 System.out.println("Xpos is:" + xPos);
-		 System.out.println("Ypos is:" + yPos);
+	
 		 //up
 		 if(angle == WorldSpatial.NORTH_DEGREE) {
 			 if(xPos > (float)coord.x) {
-				 System.out.println("LEFT");
+		
 				 turnLeft(delta);
 				 return;
 			 }
 			 if (xPos < (float)coord.x) {
-				 System.out.println("RIGHT");
+		
 				 turnRight(delta);
 				 return;
 			 }
@@ -216,12 +209,12 @@ public class MyAIController extends CarController{
 		//down
 		if(angle == WorldSpatial.SOUTH_DEGREE) {
 			 if(xPos < (float)coord.x) {
-				 System.out.println("LEFT");
+		
 				 turnLeft(delta);
 				 return;
 			 }
 			 if (xPos > (float)coord.x) {
-				 System.out.println("RIGHT");
+		
 				 turnRight(delta);
 				 return;
 			 }
@@ -229,12 +222,12 @@ public class MyAIController extends CarController{
 		//right
 		if(angle == WorldSpatial.EAST_DEGREE_MIN) {
 			 if(yPos > (float)coord.y) {
-				 System.out.println("RIGHT");
+	;
 				 turnRight(delta);
 				 return;
 			 }
 			 if (yPos < (float)coord.y) {
-				 System.out.println("LEFT");
+		
 				 turnLeft(delta);
 				 return;
 			 }
@@ -243,12 +236,12 @@ public class MyAIController extends CarController{
 		//left
 		if(angle == WorldSpatial.WEST_DEGREE) {
 			 if(yPos < (float)coord.y) {
-				 System.out.println("RIGHT");
+		
 				 turnRight(delta);
 				 return;
 			 }
 			 if (yPos > (float)coord.y) {
-				 System.out.println("LEFT");
+		
 				 turnLeft(delta);
 				 return;
 			 }

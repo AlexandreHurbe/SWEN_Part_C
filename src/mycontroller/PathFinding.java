@@ -45,7 +45,7 @@ public class PathFinding implements IDistance{
 			this.destination = this.strategy.getDestination();
 		}
 		
-		System.out.println("Dest in Pathfinding: " + this.destination.toString());
+
 		
 	}
 	
@@ -58,15 +58,15 @@ public class PathFinding implements IDistance{
 		}
 		
 		if (controller.needHealing) {
-			System.out.println("LowHealthStrategy");
+
 			return factory.getMoveStrategy("LowHealthExplore");
 		}
 		else if (myMap.returnKeyStorage() != null && controller.getKeysToCollect() - myMap.returnKeyStorage().size() == 1) {
-			System.out.println("CollectKeyStrategy");
+	
 			return factory.getMoveStrategy("CollectKeyStrategy");
 		}
 		else {
-			System.out.println("ExploreStrategy");
+		
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
@@ -123,9 +123,7 @@ public class PathFinding implements IDistance{
 					fScore.put(neighbor, gScore.get(neighbor) + strategy.distance(neighbor, destination));
 				}
 			}
-			else {
-				System.out.println("System cought");
-			}
+
 			
 		}
 		return null;
