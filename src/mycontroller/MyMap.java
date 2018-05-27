@@ -38,9 +38,7 @@ public class MyMap {
 	private HashMap<Integer, Coordinate> keyStorage = new HashMap<Integer, Coordinate>();
 	
 	
-	private MyMap() {
-		
-	}
+	private MyMap() {}
 	
 	public static MyMap getInstance() {
 		return instance;
@@ -80,9 +78,9 @@ public class MyMap {
 		// check if the destination is passable from the start
 		HashMap<Coordinate, Boolean> traveled = new HashMap<>();
 		
-		Coordinate end = findNeighbor(this.position, destination, traveled);
+		Coordinate end = detectPath(this.position, destination, traveled);
 		
-		while((end = findNeighbor(end, destination, traveled)) != null) {
+		while((end = detectPath(end, destination, traveled)) != null) {
 			if(end.equals(destination)) {
 				return true;
 			}
@@ -91,7 +89,7 @@ public class MyMap {
 		
 	}
 	
-	private Coordinate findNeighbor(Coordinate current, Coordinate destination, HashMap<Coordinate, Boolean> traveled){
+	private Coordinate detectPath(Coordinate current, Coordinate destination, HashMap<Coordinate, Boolean> traveled){
 
 		Coordinate nextNe;
 

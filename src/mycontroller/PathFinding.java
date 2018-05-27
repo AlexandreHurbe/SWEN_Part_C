@@ -10,13 +10,13 @@ import tiles.HealthTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
-public class PathFinding {
+public class PathFinding implements IDistance {
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();
-	IMoveStrategy strategy;
+	private IMoveStrategy strategy;
 	private MyStrategyFactory factory = MyStrategyFactory.getInstance();
 	private Coordinate destination;
-	private  int lowHealth = 66;
+	private int lowHealthThreshold = 66;
 
 	
 	public PathFinding(MyAIController controller) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
@@ -37,7 +37,7 @@ public class PathFinding {
 			this.destination = ((CollectKeyStrategy)this.strategy).getDestination(controller.getKey());
 			if(myMap.getMap().get(this.destination).isType(MapTile.Type.FINISH)) {
 				System.out.println("------------------------------CHANGE LOWHEALTH VALUE----------------------");
-				this.lowHealth = 20;
+				this.lowHealthThreshold = 20;
 			}
 		}else {
 			this.destination = this.strategy.getDestination();
@@ -51,7 +51,7 @@ public class PathFinding {
 		if (controller.getHealth() == 100) {
 			controller.needHealing = false;
 		}
-		if (controller.getHealth() < lowHealth) {
+		if (controller.getHealth() < lowHealthThreshold) {
 			controller.needHealing = true;
 		}
 		
@@ -59,7 +59,7 @@ public class PathFinding {
 			System.out.println("LowHealthStrategy");
 			return factory.getMoveStrategy("LowHealthExplore");
 		}
-		else if (myMap.returnKeyStorage() != null && controller.keysToCollect - myMap.returnKeyStorage().size() == 1) {
+		else if (myMap.returnKeyStorage() != null && controller.getKeysToCollect() - myMap.returnKeyStorage().size() == 1) {
 			System.out.println("CollectKeyStrategy");
 			return factory.getMoveStrategy("CollectKeyStrategy");
 		}
@@ -68,15 +68,15 @@ public class PathFinding {
 			return factory.getMoveStrategy("ExploreStrategy");
 		}
 	}
-	private boolean isHealthTrap() {
-		Iterator<Coordinate> mark = myMap.getMarkMap().keySet().iterator();
-		while(mark.hasNext()) {
-			if(myMap.getMarkMap().get(mark.next()) instanceof HealthTrap) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	private boolean isHealthTrap() {
+//		Iterator<Coordinate> mark = myMap.getMarkMap().keySet().iterator();
+//		while(mark.hasNext()) {
+//			if(myMap.getMarkMap().get(mark.next()) instanceof HealthTrap) {
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	// use A* to find path to destination
 	public HashMap<Coordinate, Float> findPath() {
@@ -216,10 +216,7 @@ public class PathFinding {
 		return neighbors;
 	}
 	// actual distance between 2 coordinates
-	public int distance(Coordinate from, Coordinate to) {
-		int distance = Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
-		return distance;
-	}
+	
 	
 	// construct the route to destination using this data structure
 	private HashMap<Coordinate, Float> reconstructPath(HashMap<Coordinate, Coordinate> mapping, Coordinate current){
@@ -241,6 +238,14 @@ public class PathFinding {
 		myPath = path.getPath();
 		return myPath;
 	}
+
+	@Override
+	public int distance(Coordinate start, Coordinate end) {
+		int distance = Math.abs(start.x - end.x) + Math.abs(start.y - end.y);
+		return distance;
+	}
+	
+	
 	
 	
 	

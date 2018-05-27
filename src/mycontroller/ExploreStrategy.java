@@ -11,7 +11,6 @@ import utilities.Coordinate;
 
 public class ExploreStrategy implements IMoveStrategy {
 	MyMap myMap = MyMap.getInstance();
-	Coordinate coord;
 	
 //	public abstract void explore(View currentView, Float health);
 	@Override
@@ -34,7 +33,6 @@ public class ExploreStrategy implements IMoveStrategy {
 	//			System.out.println(coord);
 	//			System.out.println(coord.toString() + "is" + markMap.get(coord).getType().toString());
 				if(markMap.get(coord) == null) {
-					this.coord = coord;
 					int distance = estimateCost(myMap.getPosition(), coord);
 					if(distance < minDist) {
 						minCoord = coord;

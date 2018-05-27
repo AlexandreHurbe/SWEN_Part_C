@@ -18,24 +18,24 @@ import world.WorldSpatial.RelativeDirection;
 
 public class MyAIController extends CarController{
 
-	private float SPEED_LIM = 3f;
-	private static final float MAX_DEGREES = 360;
+	private float speedLim = 3f;
+//	private static final float MAX_DEGREES = 360;
 	private static final float MAX_SPEED = 3f;
 	private static final float SLOW_SPEED = 3f;
 	private static final float TURN_SPEED = 1f;
-	private boolean SHOULD_SPEED = false;
+//	private boolean SHOULD_SPEED = false;
 	
 
-	private final float TURN_SPEED_LIM = 1f;
-	public int keysRemaining;
-	public int keysToCollect = getKey();
+//	private final float TURN_SPEED_LIM = 1f;
+//	public int keysRemaining;
+	private int keysToCollect = getKey();
 //	private HashMap<Coordinate, Float> path;
 	
 	private MyMap myMap = MyMap.getInstance();
 	private PathFinding pathFinding;
 	private HashMap<Coordinate, Float> path;
-	public boolean needHealing = false;
-	private boolean hitWall = false;
+	boolean needHealing = false;
+//	private boolean hitWall = false;
 
 	public MyAIController(Car car) {
 		super(car);	
@@ -46,8 +46,8 @@ public class MyAIController extends CarController{
 	public void update(float delta) {
 		System.out.println("###########################################UPDATE###########################################");
 		System.out.println("Keys: " + myMap.returnKeyStorage().toString());
-		keysRemaining = getKey();
-		System.out.println("keyRemaining: " + this.keysRemaining);
+//		keysRemaining = getKey();
+		System.out.println("keyRemaining: " + getKey());
 		//System.out.println("++++++++++++++++++++++++Key remain: " + keysRemaining);
 		// TODO Auto-generated method stub
 		/*
@@ -80,7 +80,7 @@ public class MyAIController extends CarController{
 		if(nearHealthTrap()) {
 			applyBrake();
 		} else {
-			bowenMove(delta);
+			move(delta);
 		}
 	}
 	
@@ -104,14 +104,14 @@ public class MyAIController extends CarController{
 		System.out.println("Xpos is:" + xPos);
 		System.out.println("Ypos is:" + yPos);
 		System.out.println("coord is:" + currentCoord);
-		if(horizontal()) {
+		if(isHorizontal()) {
 			//check Y position
 			if(almostSame(yPos, currentCoord.y, angleDiff) && almostSame(getAngle(), this.path.get(currentCoord)
 					,posDiff)) {
 				return true;
 			}
 		}
-		if(vertical()) {
+		if(isVertical()) {
 			//check X position
 			if(almostSame(xPos, currentCoord.x, angleDiff) && almostSame(getAngle(), this.path.get(currentCoord)
 					,posDiff)) {
@@ -132,7 +132,7 @@ public class MyAIController extends CarController{
 //		}
 		return false;
 	}
-	private boolean horizontal() {
+	private boolean isHorizontal() {
 		Coordinate currentCoord = new Coordinate(getPosition());
 		float goalAngle;
 		if(path.containsKey(currentCoord)) {
@@ -143,7 +143,7 @@ public class MyAIController extends CarController{
 		}
 		return false;
 	}
-	private boolean vertical() {
+	private boolean isVertical() {
 		Coordinate currentCoord = new Coordinate(getPosition());
 		float goalAngle;
 		if(path.containsKey(currentCoord)) {
@@ -155,18 +155,18 @@ public class MyAIController extends CarController{
 		return false;
 	}
 	
-	private void bowenMove(float delta) {
+	private void move(float delta) {
 		Coordinate currentCoord = new Coordinate(getPosition());
 		// following the right path
 		if(path.size()== 0 || onPath() )  {
 			
-			SPEED_LIM = MAX_SPEED;
+			speedLim = MAX_SPEED;
 			accelerate();
 		} else {
 			
 			System.out.println("Not On path");
 			System.out.println("Not On path, path: " + path.toString());
-			SPEED_LIM = SLOW_SPEED;
+			speedLim = SLOW_SPEED;
 			
 			if(getSpeed() > SLOW_SPEED) {
 				applyBrake();
@@ -176,7 +176,7 @@ public class MyAIController extends CarController{
 				applyReverseAcceleration();
 				turn(delta);
 			} else {
-				SPEED_LIM = TURN_SPEED;
+				speedLim = TURN_SPEED;
 				accelerate();
 				turn(delta);
 			}
@@ -185,9 +185,9 @@ public class MyAIController extends CarController{
 		}
 	}
 
-	private void alexMove(float delta) {
-		//System.out.println(path.toString());
-		Coordinate currentCoord = new Coordinate(getPosition());
+//	private void alexMove(float delta) {
+//		//System.out.println(path.toString());
+//		Coordinate currentCoord = new Coordinate(getPosition());
 		
 
 //			float deltaAngle = goalAngle - currentAngle;
@@ -253,35 +253,35 @@ public class MyAIController extends CarController{
 //		}
 	
 		
-	}
+//	}
 	
-	private Coordinate checkNextCoord(Coordinate currentCoord, float delta) {
-		Vector2 netAcceleration = calculateAcceleration(2f, 0.5f);
-		float nextVelocityX = getVelocity().x + netAcceleration.x * delta;
-		float nextVelocityY = getVelocity().y + netAcceleration.y * delta;
-		int nextX = (int) ((int)currentCoord.x +  nextVelocityX * delta);
-		int nextY = (int) ((int)currentCoord.x +  nextVelocityY * delta);
-		Coordinate nextCoord = new Coordinate(nextX, nextY);
-		return nextCoord;
-	}
+//	private Coordinate checkNextCoord(Coordinate currentCoord, float delta) {
+//		Vector2 netAcceleration = calculateAcceleration(2f, 0.5f);
+//		float nextVelocityX = getVelocity().x + netAcceleration.x * delta;
+//		float nextVelocityY = getVelocity().y + netAcceleration.y * delta;
+//		int nextX = (int) ((int)currentCoord.x +  nextVelocityX * delta);
+//		int nextY = (int) ((int)currentCoord.x +  nextVelocityY * delta);
+//		Coordinate nextCoord = new Coordinate(nextX, nextY);
+//		return nextCoord;
+//	}
 	
-	private Vector2 calculateAcceleration(float drivingForce, float frictionForce){
-
-		Vector2 acceleration = new Vector2(1,0);
-		acceleration.rotate(0);
-		acceleration.scl(drivingForce);
-
-		Vector2 friction = new Vector2(1,0);
-		if(acceleration.len() > 0){
-			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
-		} else {
-			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
-		}
-		friction.scl(frictionForce);
-		Vector2 netAcceleration = acceleration.add(friction);
-
-		return netAcceleration;
-	}
+//	private Vector2 calculateAcceleration(float drivingForce, float frictionForce){
+//
+//		Vector2 acceleration = new Vector2(1,0);
+//		acceleration.rotate(0);
+//		acceleration.scl(drivingForce);
+//
+//		Vector2 friction = new Vector2(1,0);
+//		if(acceleration.len() > 0){
+//			friction.rotate(acceleration.angle() - MAX_DEGREES/2);
+//		} else {
+//			friction.rotate((0 - MAX_DEGREES/2) % MAX_DEGREES);
+//		}
+//		friction.scl(frictionForce);
+//		Vector2 netAcceleration = acceleration.add(friction);
+//
+//		return netAcceleration;
+//	}
 
 	private void turn(float delta) {
 		 Coordinate currentCoord = new Coordinate(getPosition());
@@ -397,45 +397,48 @@ public class MyAIController extends CarController{
 	 }
 	 
 
-	 private WorldSpatial.RelativeDirection getDirection(float diff) {
-	    	if(diff > 0) {
-	    		return RelativeDirection.LEFT;
-	    	}
-	    	else {
-	    		return RelativeDirection.RIGHT;
-	    	}
-	 }
+//	 private WorldSpatial.RelativeDirection getDirection(float diff) {
+//	    	if(diff > 0) {
+//	    		return RelativeDirection.LEFT;
+//	    	}
+//	    	else {
+//	    		return RelativeDirection.RIGHT;
+//	    	}
+//	 }
 
-	private void moveForward(float diff, float delta) {
-		if(diff == 0 || diff == 360) {
-			accelerate();
-		} else if(diff > 0 && diff <=180 ||  diff >-360 && diff <= -180) {
-			accelerate();
-			turnLeft(delta);
-		} else {
-			accelerate();
-			turnRight(delta);
-		}
-	}
+//	private void moveForward(float diff, float delta) {
+//		if(diff == 0 || diff == 360) {
+//			accelerate();
+//		} else if(diff > 0 && diff <=180 ||  diff >-360 && diff <= -180) {
+//			accelerate();
+//			turnLeft(delta);
+//		} else {
+//			accelerate();
+//			turnRight(delta);
+//		}
+//	}
 
 	private void accelerate() {
-		if(getSpeed() < SPEED_LIM) {
+		if(getSpeed() < speedLim) {
 			applyForwardAcceleration();
 		}
 	}
 	
-	private boolean checkAroundWall() {
-		Coordinate currentCoord = new Coordinate(getPosition());
-		for(int i= -1; i < 1;i++) {
-			for(int j= -1; j < 1;j++) {
-				Coordinate newCoord = new Coordinate(currentCoord.x+i,currentCoord.y +j);
-				if(myMap.getMap().get(newCoord).isType(MapTile.Type.WALL)) {
-					return true;
-				}
-			}
-		}
-		return false;
+	public int getKeysToCollect() {
+		return this.keysToCollect;
 	}
+//	private boolean checkAroundWall() {
+//		Coordinate currentCoord = new Coordinate(getPosition());
+//		for(int i= -1; i < 1;i++) {
+//			for(int j= -1; j < 1;j++) {
+//				Coordinate newCoord = new Coordinate(currentCoord.x+i,currentCoord.y +j);
+//				if(myMap.getMap().get(newCoord).isType(MapTile.Type.WALL)) {
+//					return true;
+//				}
+//			}
+//		}
+//		return false;
+//	}
 	/*
 	private void checkNextMove(float delta) {
 		PeekTuple tuple = peek(getVelocity(), targetDegree, turnDirection, delta)

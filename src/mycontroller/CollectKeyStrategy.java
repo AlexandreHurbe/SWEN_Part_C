@@ -14,16 +14,8 @@ import utilities.Coordinate;
 public class CollectKeyStrategy implements IMoveStrategy {
 	
 	MyMap myMap = MyMap.getInstance();
-	//int currentKey = -1;
-	Coordinate dest;
-	public void move() {
-		// TODO Auto-generated method stub
-		
-	}
+//	Coordinate dest;
 	
-	public void collectKey() {
-		
-	}
 
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
@@ -44,9 +36,10 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		//myMap.returnKeyStorage().remove(keys[0]);
 		//System.out.println("KeyStorage: " + myMap.returnKeyStorage().toString());
 		//System.out.println("Dest in collectKey: " + dest.toString());
-		return dest;
+		return null;
 	}
 	
+
 	public Coordinate getDestination(int keyRemaining) {
 //		Object[] keys = myMap.returnKeyStorage().keySet().toArray();
 //		Arrays.sort(keys, Collections.reverseOrder());
@@ -72,7 +65,7 @@ public class CollectKeyStrategy implements IMoveStrategy {
 		}
 		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keyRemaining - 1);
 		Coordinate dest = new Coordinate(coord.x, coord.y);
-		this.dest = dest;
+//		this.dest = dest;
 		//myMap.returnKeyStorage().remove(keys[0]);
 		//System.out.println("KeyStorage: " + myMap.returnKeyStorage().toString());
 		System.out.println("Dest in collectKey: " + dest.toString());
