@@ -8,6 +8,10 @@ package mycontroller;
 
 import utilities.Coordinate;
 
+/**
+ * Strategy for getting destinations in different ways
+ *
+ */
 public interface IMoveStrategy extends IDistance{
 	// heuristic cost of the route
 	public int estimateCost(Coordinate start, Coordinate end);

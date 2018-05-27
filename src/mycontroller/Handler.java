@@ -6,6 +6,10 @@
 
 package mycontroller;
 
+/**
+ * Abstract class that handles a MapTile
+ *
+ */
 public abstract class Handler {
 	MyMap myMap = MyMap.getInstance();
 	public Handler() {}

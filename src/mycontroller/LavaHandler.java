@@ -6,22 +6,26 @@
 
 package mycontroller;
 
-import java.util.HashMap;
 
-import tiles.MapTile;
-import utilities.Coordinate;
-
+/**
+ * Handles LavaTrap
+ * But not implemented yet 
+ * Created for showing extensibility of the subsystem
+ */
 public class LavaHandler extends TrapHandler{
 
-	public LavaHandler(boolean blocked, HashMap<Coordinate, MapTile> view) {
-		super(blocked, view);
-		// TODO Auto-generated constructor stub
+	public LavaHandler() {
+
 	}
 
 	@Override
 	public boolean handleTrap() {
-		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void handleMapTile() {
+		
 	}
 
 }

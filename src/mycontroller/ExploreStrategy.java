@@ -14,6 +14,10 @@ import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
+/**
+ * Strategy for exploring maze to find all keys
+ *
+ */
 public class ExploreStrategy implements IMoveStrategy {
 	MyMap myMap = MyMap.getInstance();
 	HandlerLibrary handlers = HandlerLibrary.getInstance();
@@ -77,7 +81,6 @@ public class ExploreStrategy implements IMoveStrategy {
 	
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
-		// TODO Auto-generated method stub
 		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
 		return distance;
@@ -85,7 +88,6 @@ public class ExploreStrategy implements IMoveStrategy {
 
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
-		// TODO Auto-generated method stub
 		int lava = 30;
 		int health = 0;
 		int cost = distance(start, end);

@@ -16,6 +16,10 @@ import tiles.MapTile;
 import utilities.Coordinate;
 import world.WorldSpatial;
 
+/**
+ * Algorithm that uses A* search for finding path
+ *
+ */
 public class PathFinding implements IDistance{
 	private static final Integer INFINITY = Integer.MAX_VALUE;
 	MyMap myMap = MyMap.getInstance();

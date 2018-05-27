@@ -6,25 +6,17 @@
 
 package mycontroller;
 
-import java.util.HashMap;
-
-import tiles.MapTile;
-import utilities.Coordinate;
-
 
 /**
- * Abstract class for handling traps in a path.
- * 
- * @author Ethan Wu
- *
+ * Abstract class for handling traps
+ * But not implemented yet 
+ * Created for showing extensibility of the subsystem
  */
-public abstract class TrapHandler {
-	protected boolean pathBlocked;
-    protected HashMap<Coordinate, MapTile> view;
+public abstract class TrapHandler extends Handler{
 
-    public TrapHandler(boolean blocked, HashMap<Coordinate, MapTile> view){
-        this.pathBlocked = blocked;
-        this.view = view;
+
+    public TrapHandler(){
+ 
     }
     
     public abstract boolean handleTrap();

@@ -14,7 +14,7 @@ import tiles.MapTile.Type;
 import utilities.Coordinate;
 
 /**
- * @author lbwde
+ * Singleton class that contains all information of the map of the maze
  *
  */
 public class MyMap {

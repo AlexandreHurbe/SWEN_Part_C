@@ -9,6 +9,10 @@ package mycontroller;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * Singleton class that contains all handlers 
+ *
+ */
 public class HandlerLibrary {
 	private static HandlerLibrary MyHandlerLib = new HandlerLibrary();
 	
@@ -46,6 +50,11 @@ public class HandlerLibrary {
 		}
 	}
 	
+	/**
+	 * get a handler based on given name
+	 * @param name: handler name
+	 * @return handler
+	 */
 	public Handler getHandler(String name) {
 
 		return this.handlers.get(name);

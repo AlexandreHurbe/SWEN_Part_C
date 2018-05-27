@@ -11,6 +11,11 @@ import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
+
+/**
+ * Strategy for collecting keys in order
+ *
+ */
 public class CollectKeyStrategy implements IMoveStrategy {
 	
 	MyMap myMap = MyMap.getInstance();
@@ -19,36 +24,32 @@ public class CollectKeyStrategy implements IMoveStrategy {
 
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
-		// TODO Auto-generated method stub
 		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		return distance;
 	}
 
 	@Override
 	public Coordinate getDestination() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
+	// Overload getDestination method
 	public Coordinate getDestination(int keyRemaining) {
 
 		//  got all keys go to exit
 		if(keyRemaining == 1) {
-			System.out.println("Getting Finish");
 			Coordinate exit = myMap.getExit();
 			return exit;
 		}
+		
 		// got all keys in order, now let's get key
 		Coordinate coord = (Coordinate) myMap.returnKeyStorage().get(keyRemaining - 1);
 		Coordinate dest = new Coordinate(coord.x, coord.y);
-		System.out.println("Dest in collectKey: " + dest.toString());
 		return dest;
 	}
 
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
-		// TODO Auto-generated method stub
-		
 		int lava = 30;
 		int health = 0;
 		int road = 0;

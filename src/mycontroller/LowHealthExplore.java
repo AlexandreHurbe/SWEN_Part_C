@@ -14,10 +14,15 @@ import tiles.LavaTrap;
 import tiles.MapTile;
 import utilities.Coordinate;
 
+/**
+ * Strategy for recovering health when under certain health level
+ *
+ */
 public class LowHealthExplore extends ExploreStrategy{
 	
 	MyMap myMap = MyMap.getInstance();
 	HandlerLibrary handlers = HandlerLibrary.getInstance();
+	
 	@Override
 	public int estimateCost(Coordinate start, Coordinate end) {
 		int lava = 10;
@@ -72,7 +77,6 @@ public class LowHealthExplore extends ExploreStrategy{
 	
 	@Override
 	public int distance(Coordinate start, Coordinate end) {
-		// TODO Auto-generated method stub
 		int distance = Math.abs(end.x - start.x) + Math.abs(end.y - start.y);
 		
 		return distance;

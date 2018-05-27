@@ -14,6 +14,10 @@ import utilities.Coordinate;
 import world.Car;
 import world.WorldSpatial;
 
+/**
+ * Controls car 
+ *
+ */
 public class MyAIController extends CarController{
 
 	private float speedLim = 3f;

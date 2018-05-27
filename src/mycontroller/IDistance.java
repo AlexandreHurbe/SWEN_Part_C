@@ -8,6 +8,10 @@ package mycontroller;
 
 import utilities.Coordinate;
 
+/**
+ * Strategy for calculating distance in different ways
+ *
+ */
 public interface IDistance {
 	// distance between two coordinates
 	// could be calculating differently depends

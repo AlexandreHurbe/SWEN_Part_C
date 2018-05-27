@@ -6,22 +6,28 @@
 
 package mycontroller;
 
-import java.util.HashMap;
 
-import tiles.MapTile;
-import utilities.Coordinate;
-
+/**
+ * Handles MudTrap
+ * But not implemented yet 
+ * Created for showing extensibility of the subsystem
+ */
 public class MudHandler extends TrapHandler{
 
-	public MudHandler(boolean blocked, HashMap<Coordinate, MapTile> view) {
-		super(blocked, view);
-		// TODO Auto-generated constructor stub
+	public MudHandler() {
+		
 	}
 
 	@Override
 	public boolean handleTrap() {
-		// TODO Auto-generated method stub
+
 		return false;
+	}
+
+	@Override
+	public void handleMapTile() {
+
+		
 	}
 
 }

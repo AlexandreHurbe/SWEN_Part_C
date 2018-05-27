@@ -9,6 +9,10 @@ package mycontroller;
 import tiles.MapTile.Type;
 import utilities.Coordinate;
 
+/**
+ * Handles Wall MapTile
+ *
+ */
 public class WallHandler extends Handler{
 	public WallHandler() {}
 	
